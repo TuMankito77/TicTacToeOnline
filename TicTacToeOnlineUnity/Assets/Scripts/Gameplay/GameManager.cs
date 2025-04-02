@@ -27,6 +27,7 @@ namespace TicTacToeOnline.Gameplay
 
         private static GameManager instance = null;
         private PlayerType localPlayerType = PlayerType.None;
+        private PlayerType[,] gridCellsInfo = null;
         private NetworkVariable<PlayerType> playerTypeTurn = new NetworkVariable<PlayerType>(PlayerType.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         public static GameManager Instance
@@ -59,6 +60,7 @@ namespace TicTacToeOnline.Gameplay
             }
 
             instance = this;
+            gridCellsInfo = new PlayerType[3, 3];
         }
 
         public override void OnNetworkSpawn()
@@ -98,6 +100,13 @@ namespace TicTacToeOnline.Gameplay
             {
                 return;
             }
+
+            if (gridCellsInfo[gridPosition.x, gridPosition.y] != PlayerType.None)
+            {
+                return;
+            }
+
+            gridCellsInfo[gridPosition.x, gridPosition.y] = playerType;
 
             switch(playerType)
             {
