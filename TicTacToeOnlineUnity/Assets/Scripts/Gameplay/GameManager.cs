@@ -26,11 +26,13 @@ namespace TicTacToeOnline.Gameplay
 
         public class OnMatchFinishedEventArgs : EventArgs
         {
-            public Vector2Int MiddleCellGridPosition { get; private set; }
+            public Vector2 MiddleCellCanvasPosition { get; private set; }
+            public LineOrientation LineOrientation { get; private set; }
 
-            public OnMatchFinishedEventArgs(Vector2Int middleCellGridPosition)
+            public OnMatchFinishedEventArgs(Vector2 middleCellCanvasPosition, LineOrientation lineOrientation)
             {
-                MiddleCellGridPosition = middleCellGridPosition;
+                MiddleCellCanvasPosition = middleCellCanvasPosition;
+                LineOrientation = lineOrientation;
             }
         }
 
@@ -39,7 +41,8 @@ namespace TicTacToeOnline.Gameplay
 
         private static GameManager instance = null;
         private PlayerType localPlayerType = PlayerType.None;
-        private PlayerType[,] gridCellsInfo = null;
+        private GridCellInfo[,] gridCellsInfo = null;
+        private Line[] lines = null;
         private NetworkVariable<PlayerType> playerTypeTurn = new NetworkVariable<PlayerType>(PlayerType.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         public static GameManager Instance
@@ -72,7 +75,82 @@ namespace TicTacToeOnline.Gameplay
             }
 
             instance = this;
-            gridCellsInfo = new PlayerType[3, 3];
+            gridCellsInfo = new GridCellInfo[3, 3];
+
+            lines = new Line[]
+            {
+                new Line()
+                {
+                    gridPositions = new Vector2Int[]
+                    {
+                        new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(0, 2)
+                    },
+                    lineOrientation = LineOrientation.Horizontal
+                },
+
+                new Line()
+                {
+                    gridPositions = new Vector2Int[]
+                    {
+                        new Vector2Int(1, 0), new Vector2Int(1, 1), new Vector2Int(1, 2)
+                    },
+                    lineOrientation = LineOrientation.Horizontal
+                },
+
+                new Line()
+                {
+                    gridPositions = new Vector2Int[]
+                    {
+                        new Vector2Int(2, 0), new Vector2Int(2, 1), new Vector2Int(2, 2)
+                    },
+                    lineOrientation = LineOrientation.Horizontal
+                },
+
+                new Line()
+                {
+                    gridPositions = new Vector2Int[]
+                    {
+                        new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0)
+                    },
+                    lineOrientation = LineOrientation.Vertical
+                },
+
+                new Line()
+                {
+                    gridPositions = new Vector2Int[]
+                    {
+                        new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(2, 1)
+                    },
+                    lineOrientation = LineOrientation.Vertical
+                },
+
+                new Line()
+                {
+                    gridPositions = new Vector2Int[]
+                    {
+                        new Vector2Int(0, 2), new Vector2Int(1, 2), new Vector2Int(2, 2)
+                    },
+                    lineOrientation = LineOrientation.Vertical
+                },
+
+                new Line()
+                {
+                    gridPositions = new Vector2Int[]
+                    {
+                        new Vector2Int(0, 0), new Vector2Int(1, 1), new Vector2Int(2, 2)
+                    },
+                    lineOrientation = LineOrientation.DiagonalA
+                },
+
+                new Line()
+                {
+                    gridPositions = new Vector2Int[]
+                    {
+                        new Vector2Int(0, 2), new Vector2Int(1, 1), new Vector2Int(2, 0)
+                    },
+                    lineOrientation = LineOrientation.DiabonalB
+                }
+            };
         }
 
         public override void OnNetworkSpawn()
@@ -113,12 +191,13 @@ namespace TicTacToeOnline.Gameplay
                 return;
             }
 
-            if (gridCellsInfo[gridPosition.x, gridPosition.y] != PlayerType.None)
+            if (gridCellsInfo[gridPosition.x, gridPosition.y].playerTypeOwner != PlayerType.None)
             {
                 return;
             }
 
-            gridCellsInfo[gridPosition.x, gridPosition.y] = playerType;
+            gridCellsInfo[gridPosition.x, gridPosition.y].playerTypeOwner = playerType;
+            gridCellsInfo[gridPosition.x, gridPosition.y].canvasPosition = canvasPosition;
 
             switch(playerType)
             {
@@ -146,14 +225,27 @@ namespace TicTacToeOnline.Gameplay
 
         private void TestWinner()
         {
-            if(gridCellsInfo[0, 0] != PlayerType.None &&
-               gridCellsInfo[0, 0] == gridCellsInfo[0, 1] &&
-               gridCellsInfo[0, 1] == gridCellsInfo[0, 2])
+            foreach(Line line in lines)
             {
-                Debug.Log($"{GetType().Name} - We have a winner!");
-                playerTypeTurn.Value = PlayerType.None;
-                OnMatchFinished?.Invoke(this, new OnMatchFinishedEventArgs(new Vector2Int(0, 1)));
+                if(IsThereAWinLine(line))
+                {
+                    Debug.Log($"{GetType().Name} - We have a winner!");
+                    playerTypeTurn.Value = PlayerType.None;
+                    OnMatchFinished?.Invoke(this, new OnMatchFinishedEventArgs
+                        (
+                            gridCellsInfo[line.gridPositions[1].x, line.gridPositions[1].y].canvasPosition,
+                            line.lineOrientation
+                        ));
+                    break;
+                }
             }
+        }
+
+        private bool IsThereAWinLine(Line line)
+        {
+            return gridCellsInfo[line.gridPositions[0].x, line.gridPositions[0].y].playerTypeOwner != PlayerType.None &&
+                gridCellsInfo[line.gridPositions[0].x, line.gridPositions[0].y].playerTypeOwner == gridCellsInfo[line.gridPositions[1].x, line.gridPositions[1].y].playerTypeOwner &&
+                gridCellsInfo[line.gridPositions[1].x, line.gridPositions[1].y].playerTypeOwner == gridCellsInfo[line.gridPositions[2].x, line.gridPositions[2].y].playerTypeOwner;
         }
 
         private void OnClientConnected(ulong obj)

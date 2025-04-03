@@ -14,11 +14,59 @@ namespace TicTacToeOnline.Ui
         [SerializeField]
         private GameObject circlePrefab = null;
 
+        [SerializeField]
+        private GameObject winLinePrefab = null;
+
         #region Unity Methods
 
         private void Start()
         {
             GameManager.Instance.OnClickedOnGridPosition += OnClickedOnGridPosition;
+            GameManager.Instance.OnMatchFinished += OnMatchFinished;
+        }
+
+        private void OnMatchFinished(object sender, GameManager.OnMatchFinishedEventArgs e)
+        {
+            float eulerZ = 0;
+
+            switch(e.LineOrientation)
+            {
+                case LineOrientation.Horizontal:
+                    {
+                        eulerZ = 90;
+                        break;
+                    }
+
+                case LineOrientation.Vertical:
+                    {
+                        eulerZ = 0;
+                        break;
+                    }
+
+                case LineOrientation.DiagonalA:
+                    {
+                        eulerZ = -45;
+                        break;
+                    }
+
+                case LineOrientation.DiabonalB:
+                    {
+                        eulerZ = 45;
+                        break;
+                    }
+
+                default:
+                    {
+                        break;
+                    }
+            }
+
+            GameObject winLineInstance = Instantiate(winLinePrefab);
+            winLineInstance.GetComponent<NetworkObject>().Spawn(true);
+            RectTransform winLineRectTransform = winLineInstance.GetComponent<RectTransform>();
+            winLineRectTransform.SetParent(transform, false);
+            winLineRectTransform.position = e.MiddleCellCanvasPosition;
+            winLineRectTransform.rotation = Quaternion.Euler(new Vector3(0, 0, eulerZ));
         }
 
         #endregion
