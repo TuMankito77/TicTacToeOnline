@@ -22,6 +22,18 @@ namespace TicTacToeOnline.Gameplay
             }
         }
 
+        public event EventHandler<OnMatchFinishedEventArgs> OnMatchFinished;
+
+        public class OnMatchFinishedEventArgs : EventArgs
+        {
+            public Vector2Int MiddleCellGridPosition { get; private set; }
+
+            public OnMatchFinishedEventArgs(Vector2Int middleCellGridPosition)
+            {
+                MiddleCellGridPosition = middleCellGridPosition;
+            }
+        }
+
         public event EventHandler OnGameStarted;
         public event EventHandler OnPlayerTurnUpdated;
 
@@ -129,6 +141,19 @@ namespace TicTacToeOnline.Gameplay
             }
 
             OnClickedOnGridPosition?.Invoke(this, new OnClickedOnGridPositionEventArgs(canvasPosition, playerType));
+            TestWinner();
+        }
+
+        private void TestWinner()
+        {
+            if(gridCellsInfo[0, 0] != PlayerType.None &&
+               gridCellsInfo[0, 0] == gridCellsInfo[0, 1] &&
+               gridCellsInfo[0, 1] == gridCellsInfo[0, 2])
+            {
+                Debug.Log($"{GetType().Name} - We have a winner!");
+                playerTypeTurn.Value = PlayerType.None;
+                OnMatchFinished?.Invoke(this, new OnMatchFinishedEventArgs(new Vector2Int(0, 1)));
+            }
         }
 
         private void OnClientConnected(ulong obj)
