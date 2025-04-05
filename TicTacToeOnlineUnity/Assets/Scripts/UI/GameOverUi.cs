@@ -1,8 +1,10 @@
 namespace TicTacToeOnline.Ui
 {
     using UnityEngine;
+    using UnityEngine.UI;
     
     using TMPro;
+    
     using TicTacToeOnline.Gameplay;
 
     public class GameOverUi : MonoBehaviour
@@ -16,19 +18,36 @@ namespace TicTacToeOnline.Ui
         [SerializeField]
         private Color crossesColor = Color.white;
 
+        [SerializeField]
+        private Button rematchButton = null;
+
         #region Unity Methods
 
         private void Start()
         {
             Hide();
             GameManager.Instance.OnMatchFinished += OnMatchFinished;
+            GameManager.Instance.OnGameRestarted += OnGameRestarted;
+            rematchButton.onClick.AddListener(OnRematchButtonPressed);
+        }
+
+        #endregion
+
+        private void Show()
+        {
+            gameObject.SetActive(true);
+        }
+
+        private void Hide()
+        {
+            gameObject.SetActive(false);
         }
 
         private void OnMatchFinished(object sender, GameManager.OnMatchFinishedEventArgs e)
         {
             resultsText.text = e.Winner == GameManager.Instance.LocalPlayerType ? "YOU WON!" : "You lost.";
-            
-            switch(GameManager.Instance.LocalPlayerType)
+
+            switch (GameManager.Instance.LocalPlayerType)
             {
                 case PlayerType.Circle:
                     {
@@ -46,16 +65,14 @@ namespace TicTacToeOnline.Ui
             Show();
         }
 
-        #endregion
-
-        private void Show()
+        private void OnGameRestarted(object sender, System.EventArgs e)
         {
-            gameObject.SetActive(true);
+            Hide();
         }
 
-        private void Hide()
+        private void OnRematchButtonPressed()
         {
-            gameObject.SetActive(false);
+            GameManager.Instance.SendRestartGameRpc();
         }
     }
 }

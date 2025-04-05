@@ -1,5 +1,7 @@
 namespace TicTacToeOnline.Ui
 {
+    using System.Collections.Generic;
+
     using UnityEngine;
     
     using Unity.Netcode;
@@ -17,12 +19,35 @@ namespace TicTacToeOnline.Ui
         [SerializeField]
         private GameObject winLinePrefab = null;
 
+        private List<GameObject> gridVisuals = null;
+
         #region Unity Methods
+
+        private void Awake()
+        {
+            gridVisuals = new List<GameObject>();
+        }
 
         private void Start()
         {
             GameManager.Instance.OnClickedOnGridPosition += OnClickedOnGridPosition;
             GameManager.Instance.OnMatchFinished += OnMatchFinished;
+            GameManager.Instance.OnGameRestarted += OnGameRestarted;
+        }
+
+        private void OnGameRestarted(object sender, System.EventArgs e)
+        {
+            if(!IsServer)
+            {
+                return;
+            }
+
+            for(int i = 0; i < gridVisuals.Count; i++)
+            {
+                Destroy(gridVisuals[i]);
+            }
+
+            gridVisuals.Clear();
         }
 
         private void OnMatchFinished(object sender, GameManager.OnMatchFinishedEventArgs e)
@@ -72,6 +97,7 @@ namespace TicTacToeOnline.Ui
             winLineRectTransform.SetParent(transform, false);
             winLineRectTransform.position = e.MiddleCellCanvasPosition;
             winLineRectTransform.rotation = Quaternion.Euler(new Vector3(0, 0, eulerZ));
+            gridVisuals.Add(winLineInstance);
         }
 
         #endregion
@@ -116,6 +142,7 @@ namespace TicTacToeOnline.Ui
             RectTransform visualRectTransform = visual.GetComponent<RectTransform>();
             visualRectTransform.SetParent(transform, false);
             visualRectTransform.position = canvasPosition;
+            gridVisuals.Add(visual);
         }
     }
 }

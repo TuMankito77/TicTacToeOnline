@@ -40,6 +40,7 @@ namespace TicTacToeOnline.Gameplay
 
         public event EventHandler OnGameStarted;
         public event EventHandler OnPlayerTurnUpdated;
+        public event EventHandler OnGameRestarted;
 
         private static GameManager instance = null;
         private PlayerType localPlayerType = PlayerType.None;
@@ -225,6 +226,25 @@ namespace TicTacToeOnline.Gameplay
             TestWinner();
         }
 
+        [Rpc(SendTo.Server)]
+        public void SendRestartGameRpc()
+        {
+            for (int i = 0; i < gridCellsInfo.GetLength(0); i++)
+            {
+                for (int j = 0; j < gridCellsInfo.GetLength(1); j++)
+                {
+                    gridCellsInfo[i, j] = new GridCellInfo()
+                    {
+                        canvasPosition = Vector2.zero,
+                        playerTypeOwner = PlayerType.None
+                    };
+                }
+            }
+
+            playerTypeTurn.Value = PlayerType.None;
+            TriggerRestartGameRpc();
+        }
+
         [Rpc(SendTo.ClientsAndHost)]
         private void SendMatchFinishedInformationRpc(Vector2 middleLineCanvasPosition, LineOrientation lineOrientation, PlayerType winner)
         {
@@ -272,6 +292,12 @@ namespace TicTacToeOnline.Gameplay
             {
                 playerTypeTurn.Value = PlayerType.Circle;
             }
+        }
+
+        [Rpc(SendTo.ClientsAndHost)]
+        private void TriggerRestartGameRpc()
+        {
+            OnGameRestarted?.Invoke(this, EventArgs.Empty);
         }
     }
 }
