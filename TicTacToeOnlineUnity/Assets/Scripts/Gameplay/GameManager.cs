@@ -28,11 +28,13 @@ namespace TicTacToeOnline.Gameplay
         {
             public Vector2 MiddleCellCanvasPosition { get; private set; }
             public LineOrientation LineOrientation { get; private set; }
+            public PlayerType Winner { get; private set; }
 
-            public OnMatchFinishedEventArgs(Vector2 middleCellCanvasPosition, LineOrientation lineOrientation)
+            public OnMatchFinishedEventArgs(Vector2 middleCellCanvasPosition, LineOrientation lineOrientation, PlayerType winner)
             {
                 MiddleCellCanvasPosition = middleCellCanvasPosition;
                 LineOrientation = lineOrientation;
+                Winner = winner;
             }
         }
 
@@ -223,6 +225,17 @@ namespace TicTacToeOnline.Gameplay
             TestWinner();
         }
 
+        [Rpc(SendTo.ClientsAndHost)]
+        private void SendMatchFinishedInformationRpc(Vector2 middleLineCanvasPosition, LineOrientation lineOrientation, PlayerType winner)
+        {
+            OnMatchFinished?.Invoke(this, new OnMatchFinishedEventArgs
+                (
+                    middleLineCanvasPosition,
+                    lineOrientation,
+                    winner
+                ));
+        }
+
         private void TestWinner()
         {
             foreach(Line line in lines)
@@ -231,11 +244,16 @@ namespace TicTacToeOnline.Gameplay
                 {
                     Debug.Log($"{GetType().Name} - We have a winner!");
                     playerTypeTurn.Value = PlayerType.None;
-                    OnMatchFinished?.Invoke(this, new OnMatchFinishedEventArgs
-                        (
-                            gridCellsInfo[line.gridPositions[1].x, line.gridPositions[1].y].canvasPosition,
-                            line.lineOrientation
-                        ));
+                    
+                    Vector2 middleLineCanvasPosition =
+                        gridCellsInfo[line.gridPositions[1].x, line.gridPositions[1].y].canvasPosition;
+                    
+                    LineOrientation lineOrientation = line.lineOrientation;
+                    
+                    PlayerType winner =
+                        gridCellsInfo[line.gridPositions[1].x, line.gridPositions[1].y].playerTypeOwner;
+
+                    SendMatchFinishedInformationRpc(middleLineCanvasPosition, lineOrientation, winner);
                     break;
                 }
             }

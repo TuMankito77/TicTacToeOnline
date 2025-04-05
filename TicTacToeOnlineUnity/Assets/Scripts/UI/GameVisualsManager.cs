@@ -27,6 +27,11 @@ namespace TicTacToeOnline.Ui
 
         private void OnMatchFinished(object sender, GameManager.OnMatchFinishedEventArgs e)
         {
+            if(!IsServer)
+            {
+                return;
+            }
+
             float eulerZ = 0;
 
             switch(e.LineOrientation)
