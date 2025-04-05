@@ -241,7 +241,7 @@ namespace TicTacToeOnline.Gameplay
                 }
             }
 
-            playerTypeTurn.Value = PlayerType.None;
+            playerTypeTurn.Value = PlayerType.Circle;
             TriggerRestartGameRpc();
         }
 
@@ -254,6 +254,12 @@ namespace TicTacToeOnline.Gameplay
                     lineOrientation,
                     winner
                 ));
+        }
+
+        [Rpc(SendTo.ClientsAndHost)]
+        private void TriggerRestartGameRpc()
+        {
+            OnGameRestarted?.Invoke(this, EventArgs.Empty);
         }
 
         private void TestWinner()
@@ -292,12 +298,6 @@ namespace TicTacToeOnline.Gameplay
             {
                 playerTypeTurn.Value = PlayerType.Circle;
             }
-        }
-
-        [Rpc(SendTo.ClientsAndHost)]
-        private void TriggerRestartGameRpc()
-        {
-            OnGameRestarted?.Invoke(this, EventArgs.Empty);
         }
     }
 }
