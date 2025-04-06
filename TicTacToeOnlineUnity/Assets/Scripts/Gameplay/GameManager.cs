@@ -283,6 +283,25 @@ namespace TicTacToeOnline.Gameplay
                     break;
                 }
             }
+
+            bool wasTieFound = true;
+
+            for(int i = 0; i < gridCellsInfo.GetLength(0); i++)
+            {
+                for(int j = 0; j < gridCellsInfo.GetLength(1); j++)
+                {
+                    if (gridCellsInfo[i,j].playerTypeOwner == PlayerType.None)
+                    {
+                        wasTieFound = false;
+                        break;
+                    }
+                }
+            }
+
+            if(wasTieFound)
+            {
+                SendMatchFinishedInformationRpc(Vector2.zero, LineOrientation.None, PlayerType.None);
+            }
         }
 
         private bool IsThereAWinLine(Line line)

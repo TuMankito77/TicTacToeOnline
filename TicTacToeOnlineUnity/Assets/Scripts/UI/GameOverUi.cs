@@ -19,6 +19,9 @@ namespace TicTacToeOnline.Ui
         private Color crossesColor = Color.white;
 
         [SerializeField]
+        private Color tieColor = Color.white;
+
+        [SerializeField]
         private Button rematchButton = null;
 
         #region Unity Methods
@@ -45,7 +48,19 @@ namespace TicTacToeOnline.Ui
 
         private void OnMatchFinished(object sender, GameManager.OnMatchFinishedEventArgs e)
         {
-            resultsText.text = e.Winner == GameManager.Instance.LocalPlayerType ? "YOU WON!" : "You lost.";
+            if(e.Winner == PlayerType.None)
+            {
+                resultsText.text =  "It's a tie!";
+                resultsText.color = tieColor;
+            }
+            else if(e.Winner == GameManager.Instance.LocalPlayerType)
+            {
+                resultsText.text = "YOU WON!";
+            }
+            else
+            {
+                resultsText.text = "You lost.";
+            }
 
             switch (GameManager.Instance.LocalPlayerType)
             {
@@ -58,6 +73,11 @@ namespace TicTacToeOnline.Ui
                 case PlayerType.Cross:
                     {
                         resultsText.color = crossesColor;
+                        break;
+                    }
+
+                default:
+                    {
                         break;
                     }
             }
