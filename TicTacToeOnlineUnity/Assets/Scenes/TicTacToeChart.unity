@@ -2843,6 +2843,7 @@ MonoBehaviour:
   resultsText: {fileID: 70915066}
   circlesColor: {r: 0.92941177, g: 0.9490196, b: 0.95686275, a: 1}
   crossesColor: {r: 0.9372549, g: 0.13725491, b: 0.23529412, a: 1}
+  tieColor: {r: 0.5529412, g: 0.6, b: 0.68235296, a: 1}
   rematchButton: {fileID: 551369561}
 --- !u!1 &1669630272
 GameObject:
