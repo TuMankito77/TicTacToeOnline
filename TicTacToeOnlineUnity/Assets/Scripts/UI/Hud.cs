@@ -4,7 +4,6 @@ namespace TicTacToeOnline.Ui
     
     using TMPro;
     using TicTacToeOnline.Gameplay;
-    using UnityEngine.UI;
 
     public class Hud : MonoBehaviour
     {
@@ -22,7 +21,10 @@ namespace TicTacToeOnline.Ui
         private TextMeshProUGUI playerTurnText = null;
 
         [SerializeField]
-        private RectTransform verticalLayoutRectTransform = null;
+        private TextMeshProUGUI crossesScoreText = null;
+
+        [SerializeField]
+        private TextMeshProUGUI circlesScoreText = null;
 
         #region Unity Methods
 
@@ -31,11 +33,14 @@ namespace TicTacToeOnline.Ui
             circleImage.SetActive(false);
             crossImage.SetActive(false);
             playerTurnText.text = WAITING_FOR_PLAYER_TEXT;
+            crossesScoreText.text = $"{0}";
+            circlesScoreText.text = $"{0}";
         }
 
         private void Start()
         {
             GameManager.Instance.OnPlayerTurnUpdated += OnPlayerTurnUpdated;
+            GameManager.Instance.OnScoresUpdated += OnScoresUpdated;
         }
 
         #endregion
@@ -43,6 +48,13 @@ namespace TicTacToeOnline.Ui
         private void OnPlayerTurnUpdated(object sender, System.EventArgs e)
         {
             UpdatePlayerTurnText();
+        }
+
+        private void OnScoresUpdated(object sender, System.EventArgs e)
+        {
+            GameManager.Instance.GetPlayerScores(out int circlesScore, out int crossesScore);
+            circlesScoreText.text = circlesScore.ToString();
+            crossesScoreText.text = crossesScore.ToString();
         }
 
         private void UpdatePlayerTurnText()

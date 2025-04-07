@@ -41,12 +41,15 @@ namespace TicTacToeOnline.Gameplay
         public event EventHandler OnGameStarted;
         public event EventHandler OnPlayerTurnUpdated;
         public event EventHandler OnGameRestarted;
+        public event EventHandler OnScoresUpdated;
 
         private static GameManager instance = null;
         private PlayerType localPlayerType = PlayerType.None;
         private GridCellInfo[,] gridCellsInfo = null;
         private Line[] lines = null;
         private NetworkVariable<PlayerType> playerTypeTurn = new NetworkVariable<PlayerType>(PlayerType.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        private NetworkVariable<int> crossesScore = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        private NetworkVariable<int> circlesScore = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         public static GameManager Instance
         {
@@ -174,6 +177,18 @@ namespace TicTacToeOnline.Gameplay
                 { 
                     OnPlayerTurnUpdated?.Invoke(this, EventArgs.Empty); 
                 };
+
+            crossesScore.OnValueChanged +=
+                (crossesPreviousScore, crossesUpdatedScore) =>
+                {
+                    OnScoresUpdated?.Invoke(this, EventArgs.Empty);
+                };
+
+            circlesScore.OnValueChanged +=
+                (circlesPreviousScore, circlesUpdatedScore) =>
+                {
+                    OnScoresUpdated?.Invoke(this, EventArgs.Empty);
+                };
             
             if(IsServer)
             {
@@ -245,6 +260,12 @@ namespace TicTacToeOnline.Gameplay
             TriggerRestartGameRpc();
         }
 
+        public void GetPlayerScores(out int circlesScore, out int crossesScore)
+        {
+            circlesScore = this.circlesScore.Value;
+            crossesScore = this.crossesScore.Value;
+        }
+
         [Rpc(SendTo.ClientsAndHost)]
         private void SendMatchFinishedInformationRpc(Vector2 middleLineCanvasPosition, LineOrientation lineOrientation, PlayerType winner)
         {
@@ -278,6 +299,26 @@ namespace TicTacToeOnline.Gameplay
                     
                     PlayerType winner =
                         gridCellsInfo[line.gridPositions[1].x, line.gridPositions[1].y].playerTypeOwner;
+
+                    switch(winner)
+                    {
+                        case PlayerType.Circle:
+                            {
+                                circlesScore.Value++;
+                                break;
+                            }
+
+                        case PlayerType.Cross:
+                            {
+                                crossesScore.Value++;
+                                break;
+                            }
+
+                        default:
+                            {
+                                break;
+                            }
+                    }
 
                     SendMatchFinishedInformationRpc(middleLineCanvasPosition, lineOrientation, winner);
                     break;
