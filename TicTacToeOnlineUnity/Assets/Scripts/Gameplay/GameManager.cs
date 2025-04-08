@@ -42,6 +42,7 @@ namespace TicTacToeOnline.Gameplay
         public event EventHandler OnPlayerTurnUpdated;
         public event EventHandler OnGameRestarted;
         public event EventHandler OnScoresUpdated;
+        public event EventHandler OnMarkPlaced;
 
         private static GameManager instance = null;
         private PlayerType localPlayerType = PlayerType.None;
@@ -214,6 +215,7 @@ namespace TicTacToeOnline.Gameplay
                 return;
             }
 
+            SendOnMarkPlacedRpc();
             gridCellsInfo[gridPosition.x, gridPosition.y].playerTypeOwner = playerType;
             gridCellsInfo[gridPosition.x, gridPosition.y].canvasPosition = canvasPosition;
 
@@ -239,6 +241,12 @@ namespace TicTacToeOnline.Gameplay
 
             OnClickedOnGridPosition?.Invoke(this, new OnClickedOnGridPositionEventArgs(canvasPosition, playerType));
             TestWinner();
+        }
+
+        [Rpc(SendTo.ClientsAndHost)]
+        public void SendOnMarkPlacedRpc()
+        {
+            OnMarkPlaced?.Invoke(this, EventArgs.Empty);
         }
 
         [Rpc(SendTo.Server)]
