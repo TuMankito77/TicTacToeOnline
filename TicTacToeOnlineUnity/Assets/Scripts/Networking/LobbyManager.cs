@@ -1,5 +1,7 @@
 namespace TicTacToeOnline.Networking
 {
+    using System;
+    using System.Collections;
     using System.Collections.Generic;
 
     using UnityEngine;
@@ -8,49 +10,49 @@ namespace TicTacToeOnline.Networking
     using Unity.Services.Authentication;
     using Unity.Services.Lobbies;
     using Unity.Services.Lobbies.Models;
-    using System.Collections;
 
-    public class LobbyController : MonoBehaviour
+    public class LobbyManager : MonoBehaviour
     {
+        public const string LOBBY_NAME_KEY = "LobbyName";
+
+        private static LobbyManager instance = null;
+
+        public static LobbyManager Instance
+        {
+            get
+            {
+                if(instance == null)
+                {
+                    GameObject lobbyManagerGO = new GameObject($"{typeof(LobbyManager).Name}");
+                    DontDestroyOnLoad(lobbyManagerGO);
+                    instance = lobbyManagerGO.AddComponent<LobbyManager>();
+                }
+
+                return instance;
+            }
+        }
+
         private bool isPlayerSignedIn = false;
         private Lobby lobbyCreated = null;
         private Lobby lobbyJoined = null;
         private Coroutine keepLobbyAliveCoroutine;
 
+        public Action OnAnonimousSignInSucess;
+        public Action OnAnonimousSignInFail;
+        public Lobby LobbyCreated = null;
+        public Lobby LobbyJoined = null;
+
         #region Unity Methods
 
-        private async void Start()
+        private void Start()
         {
-            await UnityServices.InitializeAsync();
-
-            AuthenticationService.Instance.SignedIn += OnSignedIn;
-            await AuthenticationService.Instance.SignInAnonymouslyAsync();
-        }
-
-        private void Update()
-        {
-            if(isPlayerSignedIn)
+            if (instance != null && instance != this)
             {
-                if(Input.GetKeyDown(KeyCode.Space) && lobbyCreated == null)
-                {
-                    CreateLobby();
-                }
-
-                if(Input.GetKeyDown(KeyCode.L) && lobbyJoined == null)
-                {
-                    ListLobbies();
-                }
-
-                if(Input.GetKeyDown(KeyCode.J) && lobbyJoined == null)
-                {
-                    ConnectToFirstLobbyFound();
-                }
-
-                if(Input.GetKeyDown(KeyCode.Q) && lobbyJoined == null)
-                {
-                    QuickJoinLobby();
-                }
+                Debug.LogError($"Another instance of the {GetType().Name} was found, this instance will be destroyed.");
+                Destroy(gameObject);
             }
+
+            instance = this;
         }
 
         #endregion
@@ -58,22 +60,75 @@ namespace TicTacToeOnline.Networking
         private void OnSignedIn()
         {
             isPlayerSignedIn = true;
+            OnAnonimousSignInSucess?.Invoke();
             Debug.Log($"Signed in as: {AuthenticationService.Instance.PlayerId}");
         }
 
-        private async void CreateLobby()
+        public async void SignInAnonymously()
         {
             try
             {
-                string lobbyName = "My lobby";
-                int maxPlayers = 2;
+                await UnityServices.InitializeAsync();
+                AuthenticationService.Instance.SignedIn += OnSignedIn;
+                await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            }
+            catch(Exception e)
+            {
+                OnAnonimousSignInFail?.Invoke();
+                Debug.LogError($"{GetType().Name} - {e.Message}");
+            }
+        }
+
+        public async void CreateLobby(string lobbyName, int maxPlayers, Action<Lobby> OnSucess, Action OnFailure)
+        {
+            try
+            {
                 lobbyCreated = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers);
                 keepLobbyAliveCoroutine = StartCoroutine(KeepLobbyAlive());
+                OnSucess?.Invoke(lobbyCreated);
                 Debug.Log($"Lobby created successfully! Lobby name: {lobbyCreated.Name} - Max number of players: {lobbyCreated.MaxPlayers}");
             }
             catch(LobbyServiceException e)
             {
+                OnFailure?.Invoke();
                 Debug.LogError(e);
+            }
+        }
+
+        public async void GetAvailableLobbies(Action<List<Lobby>> OnSuccess, Action OnFailure)
+        {
+            try
+            {
+                QueryResponse queryResponse = await LobbyService.Instance.QueryLobbiesAsync(GetDefaultQueryOptions());
+                OnSuccess(queryResponse.Results);
+            }
+            catch(LobbyServiceException e)
+            {
+                OnFailure();
+                Debug.LogError(e.Message);
+            }
+        }
+
+        public async void ConnectToLobby(string lobbyId, Action<Lobby> OnSuccess, Action OnFailure)
+        {
+            try
+            {
+                QueryResponse queryResponse = await LobbyService.Instance.QueryLobbiesAsync(GetDefaultQueryOptions());
+                Lobby lobbyFound = queryResponse.Results.Find((lobby) => lobby.Id == lobbyId);
+                
+                if (lobbyFound == null)
+                {
+                    OnFailure?.Invoke();
+                    return;
+                }
+
+                lobbyJoined = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId);
+                OnSuccess(lobbyJoined);
+            }
+            catch(Exception e)
+            {
+                OnFailure?.Invoke();
+                Debug.LogError(e.Message);
             }
         }
 
@@ -165,6 +220,19 @@ namespace TicTacToeOnline.Networking
             {
                 Debug.LogError(e.Message);
             }
+        }
+
+        private QueryLobbiesOptions GetDefaultQueryOptions()
+        {
+            QueryLobbiesOptions queryLobbiesOptions = new QueryLobbiesOptions
+            {
+                Filters = new List<QueryFilter>
+                {
+                    new QueryFilter(QueryFilter.FieldOptions.AvailableSlots, "1", QueryFilter.OpOptions.GE)
+                }
+            };
+
+            return queryLobbiesOptions;
         }
     }
 }
