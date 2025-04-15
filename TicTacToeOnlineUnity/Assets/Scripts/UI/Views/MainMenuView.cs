@@ -24,7 +24,8 @@ namespace TicTacToeOnline.Ui.Views
 
         private void OnCreateSessionButtonPressed()
         {
-            viewManager.DisplayView(typeof(LoadingView));
+            viewManager.DisplayView(typeof(CreateSessionView));
+            viewManager.RemoveView(this.GetType());
         }
 
         private void OnFindSessionButtonPressed()

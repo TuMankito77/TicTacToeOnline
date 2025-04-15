@@ -33,6 +33,13 @@ namespace TicTacToeOnline.Ui.Views
                 string.IsNullOrEmpty(playerNameInputField.text) ||
                 string.IsNullOrWhiteSpace(playerNameInputField.text))
             {
+                MessageView messageView = viewManager.DisplayView(typeof(MessageView)) as MessageView;
+
+                if(messageView)
+                {
+                    messageView.SetMessageText($"There are empty input fields, please make sure to fill them all.");
+                }
+
                 return;
             }
 
@@ -43,16 +50,25 @@ namespace TicTacToeOnline.Ui.Views
         private void OnMatchCreationSuccess(Lobby lobby)
         {
             viewManager.RemoveView(typeof(LoadingView));
-            //Display view with session details.
-            //viewManager.DisplayView();
+            SessionView sessionView = viewManager.DisplayView(typeof(SessionView)) as SessionView;
+
+            if(sessionView)
+            {
+                sessionView.SetSessionName(lobby.Name);
+            }
+
             viewManager.RemoveView(GetType());
         }
 
         private void OnMatchCreationFailure()
         {
             viewManager.RemoveView(typeof(LoadingView));
-            //Display view with failure message.
-            //viewManager.DisplayView();
+            MessageView messageView = viewManager.DisplayView(typeof(MessageView)) as MessageView;
+
+            if(messageView)
+            {
+                messageView.SetMessageText("Failed to create session, please try again.");
+            }
         }
     }
 }

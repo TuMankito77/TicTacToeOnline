@@ -38,7 +38,7 @@ namespace TicTacToeOnline.Ui.Views
             }
 
             viewsDisplayed.Remove(viewInstance);
-            Destroy(viewInstance);
+            Destroy(viewInstance.gameObject);
         }
     }
 }

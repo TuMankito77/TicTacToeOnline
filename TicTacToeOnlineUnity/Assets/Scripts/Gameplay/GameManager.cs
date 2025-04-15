@@ -5,6 +5,8 @@ namespace TicTacToeOnline.Gameplay
     using UnityEngine;
     
     using Unity.Netcode;
+    using TicTacToeOnline.Ui.Views;
+    using TicTacToeOnline.Networking;
 
     public class GameManager : NetworkBehaviour
     {
@@ -43,6 +45,9 @@ namespace TicTacToeOnline.Gameplay
         public event EventHandler OnGameRestarted;
         public event EventHandler OnScoresUpdated;
         public event EventHandler OnMarkPlaced;
+
+        [SerializeField]
+        private ViewManager viewManager = null;
 
         private static GameManager instance = null;
         private PlayerType localPlayerType = PlayerType.None;
@@ -160,6 +165,14 @@ namespace TicTacToeOnline.Gameplay
             };
         }
 
+        private void Start()
+        {
+            viewManager.DisplayView(typeof(LoadingView));
+            LobbyManager.Instance.OnAnonimousSignInSucess += OnAnonimousSignInSuccess;
+            LobbyManager.Instance.OnAnonimousSignInFail += OnAnonimousSignInFailure;
+            LobbyManager.Instance.SignInAnonymously();
+        }
+
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
@@ -196,7 +209,6 @@ namespace TicTacToeOnline.Gameplay
                 NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
             }
         }
-
 
         #endregion
 
@@ -366,6 +378,29 @@ namespace TicTacToeOnline.Gameplay
             {
                 playerTypeTurn.Value = PlayerType.Circle;
             }
+        }
+
+        private void OnAnonimousSignInSuccess()
+        {
+            viewManager.RemoveView(typeof(LoadingView));
+            LobbyManager.Instance.OnAnonimousSignInSucess -= OnAnonimousSignInSuccess;
+            LobbyManager.Instance.OnAnonimousSignInFail -= OnAnonimousSignInFailure;
+            viewManager.DisplayView(typeof(MainMenuView));
+        }
+
+        private void OnAnonimousSignInFailure()
+        {
+            viewManager.RemoveView(typeof(LoadingView));
+            MessageView messageView = viewManager.DisplayView(typeof(MessageView)) as MessageView;
+            messageView.SetMessageText("Failed to connect to online services. Press the button below to try again.");
+
+            void OnAnonimousSignInFailureMessageClosed()
+            {
+                messageView.onCloseButtonPressed -= OnAnonimousSignInFailureMessageClosed;
+                LobbyManager.Instance.SignInAnonymously();
+            }
+
+            messageView.onCloseButtonPressed += OnAnonimousSignInFailureMessageClosed;
         }
     }
 }

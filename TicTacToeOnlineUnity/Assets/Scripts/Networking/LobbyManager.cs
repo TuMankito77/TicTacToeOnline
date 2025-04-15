@@ -57,13 +57,6 @@ namespace TicTacToeOnline.Networking
 
         #endregion
 
-        private void OnSignedIn()
-        {
-            isPlayerSignedIn = true;
-            OnAnonimousSignInSucess?.Invoke();
-            Debug.Log($"Signed in as: {AuthenticationService.Instance.PlayerId}");
-        }
-
         public async void SignInAnonymously()
         {
             try
@@ -130,6 +123,13 @@ namespace TicTacToeOnline.Networking
                 OnFailure?.Invoke();
                 Debug.LogError(e.Message);
             }
+        }
+
+        private void OnSignedIn()
+        {
+            isPlayerSignedIn = true;
+            OnAnonimousSignInSucess?.Invoke();
+            Debug.Log($"Signed in as: {AuthenticationService.Instance.PlayerId}");
         }
 
         private async void ListLobbies()
