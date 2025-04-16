@@ -33,6 +33,11 @@ namespace TicTacToeOnline.Ui.Views
             sessionNameText.text = sessionName;
         }
 
+        public void SetPlayerAName(string playerAName)
+        {
+            playerANameText.text = playerAName;
+        }
+
         private void OnStartMatchButtonPressed()
         {
             viewManager.RemoveView(this.GetType());

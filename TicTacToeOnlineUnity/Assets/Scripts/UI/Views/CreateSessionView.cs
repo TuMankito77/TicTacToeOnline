@@ -44,7 +44,7 @@ namespace TicTacToeOnline.Ui.Views
             }
 
             viewManager.DisplayView(typeof(LoadingView));
-            LobbyManager.Instance.CreateLobby(matchNameInputField.text, 2, OnMatchCreationSuccess, OnMatchCreationFailure);
+            LobbyManager.Instance.CreateLobby(playerNameInputField.text, matchNameInputField.text, 2, OnMatchCreationSuccess, OnMatchCreationFailure);
         }
 
         private void OnMatchCreationSuccess(Lobby lobby)
@@ -52,10 +52,24 @@ namespace TicTacToeOnline.Ui.Views
             viewManager.RemoveView(typeof(LoadingView));
             SessionView sessionView = viewManager.DisplayView(typeof(SessionView)) as SessionView;
 
-            if(sessionView)
+            if(sessionView == null)
             {
-                sessionView.SetSessionName(lobby.Name);
+                MessageView messageView = viewManager.DisplayView(typeof(MessageView)) as MessageView;
+                messageView.SetMessageText("Something went wrong, please try again.");
+                return;
             }
+
+
+            sessionView.SetSessionName(lobby.Name);
+
+            Player player = lobby.Players.Find((player) => player.Id == LobbyManager.Instance.GetPlayerId());
+
+            if (player == null)
+            {
+                return;
+            }
+
+            sessionView.SetPlayerAName(player.Data[LobbyManager.PLAYER_NAME_KEY].Value);
 
             viewManager.RemoveView(GetType());
         }

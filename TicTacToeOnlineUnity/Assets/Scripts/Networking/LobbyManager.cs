@@ -13,7 +13,7 @@ namespace TicTacToeOnline.Networking
 
     public class LobbyManager : MonoBehaviour
     {
-        public const string LOBBY_NAME_KEY = "LobbyName";
+        public const string PLAYER_NAME_KEY = "PlayerName";
 
         private static LobbyManager instance = null;
 
@@ -72,11 +72,29 @@ namespace TicTacToeOnline.Networking
             }
         }
 
-        public async void CreateLobby(string lobbyName, int maxPlayers, Action<Lobby> OnSucess, Action OnFailure)
+        public async void CreateLobby(string lobbyName, string playerName, int maxPlayers, Action<Lobby> OnSucess, Action OnFailure)
         {
+            if(keepLobbyAliveCoroutine != null)
+            {
+                StopCoroutine(keepLobbyAliveCoroutine);
+                keepLobbyAliveCoroutine = null;
+            }
+
             try
             {
-                lobbyCreated = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers);
+                CreateLobbyOptions createLobbyOptions = new CreateLobbyOptions()
+                {
+                    IsPrivate = false,
+                    Player = new Player()
+                    {
+                        Data = new Dictionary<string, PlayerDataObject>()
+                        {
+                            {PLAYER_NAME_KEY, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, playerName)}
+                        }
+                    }
+                };
+
+                lobbyCreated = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers, createLobbyOptions);
                 keepLobbyAliveCoroutine = StartCoroutine(KeepLobbyAlive());
                 OnSucess?.Invoke(lobbyCreated);
                 Debug.Log($"Lobby created successfully! Lobby name: {lobbyCreated.Name} - Max number of players: {lobbyCreated.MaxPlayers}");
@@ -123,6 +141,11 @@ namespace TicTacToeOnline.Networking
                 OnFailure?.Invoke();
                 Debug.LogError(e.Message);
             }
+        }
+
+        public string GetPlayerId()
+        {
+            return AuthenticationService.Instance.PlayerId;
         }
 
         private void OnSignedIn()
