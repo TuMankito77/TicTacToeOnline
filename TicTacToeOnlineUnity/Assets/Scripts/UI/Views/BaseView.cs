@@ -8,7 +8,7 @@ namespace TicTacToeOnline.Ui.Views
     {
         protected ViewManager viewManager = null;
 
-        public void Initialize(ViewManager viewManager)
+        public virtual void Initialize(ViewManager viewManager)
         {
             this.viewManager = viewManager;
         }
