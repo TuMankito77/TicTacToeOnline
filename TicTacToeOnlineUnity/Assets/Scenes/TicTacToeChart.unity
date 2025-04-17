@@ -2030,6 +2030,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1669630276}
     m_Modifications:
+    - target: {fileID: 1803659071256340897, guid: 9bf6fa6d37380584dbcc76ff7dcf4036, type: 3}
+      propertyPath: viewPrefabs.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1803659071256340897, guid: 9bf6fa6d37380584dbcc76ff7dcf4036, type: 3}
+      propertyPath: 'viewPrefabs.Array.data[5]'
+      value: 
+      objectReference: {fileID: 4562827827429389162, guid: 9928380722092f24abc9e6c7fd9dcd56, type: 3}
     - target: {fileID: 1920759342952291666, guid: 9bf6fa6d37380584dbcc76ff7dcf4036, type: 3}
       propertyPath: m_Name
       value: ViewManager
