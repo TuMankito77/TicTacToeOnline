@@ -33,14 +33,16 @@ namespace TicTacToeOnline.Networking
         }
 
         private bool isPlayerSignedIn = false;
-        private Lobby lobbyCreated = null;
-        private Lobby lobbyJoined = null;
+        private bool isLobbyHost = false;
+        private Lobby lobby = null;
         private Coroutine keepLobbyAliveCoroutine;
 
         public Action OnAnonimousSignInSucess;
         public Action OnAnonimousSignInFail;
         public Lobby LobbyCreated = null;
-        public Lobby LobbyJoined = null;
+        public Lobby Lobby => lobby;
+        public bool IsLobbyHost => isLobbyHost;
+        public bool IsPlayerSignedIn => IsPlayerSignedIn;
 
         #region Unity Methods
 
@@ -94,10 +96,11 @@ namespace TicTacToeOnline.Networking
                     }
                 };
 
-                lobbyCreated = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers, createLobbyOptions);
+                lobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers, createLobbyOptions);
                 keepLobbyAliveCoroutine = StartCoroutine(KeepLobbyAlive());
-                OnSucess?.Invoke(lobbyCreated);
-                Debug.Log($"Lobby created successfully! Lobby name: {lobbyCreated.Name} - Max number of players: {lobbyCreated.MaxPlayers}");
+                isLobbyHost = true;
+                OnSucess?.Invoke(lobby);
+                Debug.Log($"Lobby created successfully! Lobby name: {lobby.Name} - Max number of players: {lobby.MaxPlayers}");
             }
             catch(LobbyServiceException e)
             {
@@ -120,10 +123,21 @@ namespace TicTacToeOnline.Networking
             }
         }
 
-        public async void ConnectToLobby(string lobbyId, Action<Lobby> OnSuccess, Action OnFailure)
+        public async void ConnectToLobby(string lobbyId, string playerName, Action<Lobby> OnSuccess, Action OnFailure)
         {
             try
             {
+                JoinLobbyByIdOptions joinLobbyByIdOptions = new JoinLobbyByIdOptions()
+                {
+                    Player = new Player()
+                    {
+                        Data = new Dictionary<string, PlayerDataObject>()
+                        {
+                            { PLAYER_NAME_KEY, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, playerName) }
+                        }
+                    }
+                };
+
                 QueryResponse queryResponse = await LobbyService.Instance.QueryLobbiesAsync(GetDefaultQueryOptions());
                 Lobby lobbyFound = queryResponse.Results.Find((lobby) => lobby.Id == lobbyId);
                 
@@ -133,8 +147,8 @@ namespace TicTacToeOnline.Networking
                     return;
                 }
 
-                lobbyJoined = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId);
-                OnSuccess(lobbyJoined);
+                lobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId);
+                OnSuccess(lobby);
             }
             catch(Exception e)
             {
@@ -199,9 +213,9 @@ namespace TicTacToeOnline.Networking
                     return;
                 }
 
-                lobbyJoined = await LobbyService.Instance.JoinLobbyByIdAsync(queryResponse.Results[0].Id);
+                lobby = await LobbyService.Instance.JoinLobbyByIdAsync(queryResponse.Results[0].Id);
 
-                Debug.Log($"Joined to lobby successfully! Lobby name: {lobbyJoined.Name} - Max number of players: {lobbyJoined.MaxPlayers}");
+                Debug.Log($"Joined to lobby successfully! Lobby name: {lobby.Name} - Max number of players: {lobby.MaxPlayers}");
             }
             catch(LobbyServiceException e)
             {
@@ -213,7 +227,7 @@ namespace TicTacToeOnline.Networking
         {
             yield return new WaitForSeconds(15);
 
-            if(lobbyCreated != null)
+            if(lobby != null)
             {
                 SendLobbyHeartbeat();
             }
@@ -223,7 +237,7 @@ namespace TicTacToeOnline.Networking
         {
             try
             {
-                await LobbyService.Instance.SendHeartbeatPingAsync(lobbyCreated.Id);
+                await LobbyService.Instance.SendHeartbeatPingAsync(lobby.Id);
                 keepLobbyAliveCoroutine = StartCoroutine(KeepLobbyAlive());
                 Debug.Log("Heartbeat sent");
             }
@@ -237,7 +251,7 @@ namespace TicTacToeOnline.Networking
         {
             try
             {
-                lobbyJoined = await LobbyService.Instance.QuickJoinLobbyAsync();
+                lobby = await LobbyService.Instance.QuickJoinLobbyAsync();
             }
             catch(LobbyServiceException e)
             {

@@ -1,16 +1,17 @@
 namespace TicTacToeOnline.Ui.Views
 {
-    using TicTacToeOnline.Networking;
-    using TMPro;
-    using Unity.Services.Lobbies.Models;
     using UnityEngine;
     using UnityEngine.UI;
+    
+    using Unity.Services.Lobbies.Models;
+    
+    using TMPro;
+    
+    using TicTacToeOnline.Gameplay;
+    using TicTacToeOnline.Networking;
 
     public class CreateSessionView : BaseView
     {
-        [SerializeField]
-        private TMP_InputField playerNameInputField = null;
-
         [SerializeField]
         private TMP_InputField matchNameInputField = null;
 
@@ -29,22 +30,20 @@ namespace TicTacToeOnline.Ui.Views
         private void OnCreateButtonPressed()
         {
             if(string.IsNullOrEmpty(matchNameInputField.text) || 
-                string.IsNullOrWhiteSpace(matchNameInputField.text)||
-                string.IsNullOrEmpty(playerNameInputField.text) ||
-                string.IsNullOrWhiteSpace(playerNameInputField.text))
+                string.IsNullOrWhiteSpace(matchNameInputField.text))
             {
                 MessageView messageView = viewManager.DisplayView(typeof(MessageView)) as MessageView;
 
                 if(messageView)
                 {
-                    messageView.SetMessageText($"There are empty input fields, please make sure to fill them all.");
+                    messageView.SetMessageText($"The match name is empty, please make sure to type a match name.");
                 }
 
                 return;
             }
 
             viewManager.DisplayView(typeof(LoadingView));
-            LobbyManager.Instance.CreateLobby(playerNameInputField.text, matchNameInputField.text, 2, OnMatchCreationSuccess, OnMatchCreationFailure);
+            LobbyManager.Instance.CreateLobby(matchNameInputField.text, GameManager.Instance.PlayerName, 2, OnMatchCreationSuccess, OnMatchCreationFailure);
         }
 
         private void OnMatchCreationSuccess(Lobby lobby)

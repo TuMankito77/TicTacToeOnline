@@ -4,29 +4,36 @@ namespace TicTacToeOnline.Ui.Views
     
     using Unity.Services.Lobbies.Models;
     using UnityEngine;
-    using UnityEngine.UI;
     
     using TicTacToeOnline.Networking;
+    using TicTacToeOnline.Gameplay;
 
     public class FindSessionView : BaseView
     {
         [SerializeField]
-        private Button buttonPrefab = null;
+        private BaseButton buttonPrefab = null;
 
         [SerializeField]
         private Transform buttonsParentTransform = null;
 
         [SerializeField]
-        private Button refreshButton = null;
+        private BaseButton refreshButton = null;
 
-        private List<Button> sessionButtons = null;
+        private List<BaseButton> sessionButtons = null;
 
         #region Unity Methods
 
         private void Awake()
         {
-            sessionButtons = new List<Button>();
-            refreshButton.onClick.AddListener(OnRefreshButtonPressed);
+            sessionButtons = new List<BaseButton>();
+            refreshButton.onButtonPressed += OnRefreshButtonPressed;
+        }
+
+        private void OnDestroy()
+        {
+            sessionButtons.Clear();
+            sessionButtons = null;
+            refreshButton.onButtonPressed -= OnRefreshButtonPressed;
         }
 
         #endregion
@@ -41,7 +48,7 @@ namespace TicTacToeOnline.Ui.Views
         {
             viewManager.DisplayView(typeof(LoadingView));
 
-            foreach(Button sessionButton in sessionButtons)
+            foreach(BaseButton sessionButton in sessionButtons)
             {
                 Destroy(sessionButton.gameObject);
             }
@@ -56,16 +63,17 @@ namespace TicTacToeOnline.Ui.Views
             
             foreach(Lobby lobby in lobbies)
             {
-                Button sessionButton = Instantiate(buttonPrefab, buttonsParentTransform);
+                BaseButton sessionButton = Instantiate(buttonPrefab, buttonsParentTransform);
+                sessionButton.SetText(lobby.Name);
 
                 void OnButtonPressed()
                 {
+                    sessionButton.onButtonPressed -= OnButtonPressed;
                     viewManager.DisplayView(typeof(LoadingView));
-                    LobbyManager.Instance.ConnectToLobby(lobby.Id, OnConnectToLobbySuccess, OnConnectToLobbyFailure);
-                    sessionButton.onClick.RemoveListener(OnButtonPressed);
+                    LobbyManager.Instance.ConnectToLobby(lobby.Id, GameManager.Instance.PlayerName, OnConnectToLobbySuccess, OnConnectToLobbyFailure);
                 }
 
-                sessionButton.onClick.AddListener(OnButtonPressed);
+                sessionButton.onButtonPressed += OnButtonPressed;
                 sessionButtons.Add(sessionButton);
             }
         }

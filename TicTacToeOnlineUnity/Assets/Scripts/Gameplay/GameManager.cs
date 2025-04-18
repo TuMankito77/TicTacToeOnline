@@ -56,7 +56,7 @@ namespace TicTacToeOnline.Gameplay
         private NetworkVariable<PlayerType> playerTypeTurn = new NetworkVariable<PlayerType>(PlayerType.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
         private NetworkVariable<int> crossesScore = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
         private NetworkVariable<int> circlesScore = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-
+        
         public static GameManager Instance
         {
             get
@@ -74,6 +74,7 @@ namespace TicTacToeOnline.Gameplay
 
         public PlayerType LocalPlayerType => localPlayerType;
         public PlayerType PlayerTypeTurn => playerTypeTurn.Value;
+        public string PlayerName { get; private set; }
 
         #region Unity Methods
 
@@ -385,7 +386,8 @@ namespace TicTacToeOnline.Gameplay
             viewManager.RemoveView(typeof(LoadingView));
             LobbyManager.Instance.OnAnonimousSignInSucess -= OnAnonimousSignInSuccess;
             LobbyManager.Instance.OnAnonimousSignInFail -= OnAnonimousSignInFailure;
-            viewManager.DisplayView(typeof(MainMenuView));
+            MainMenuView mainMenuView = viewManager.DisplayView(typeof(MainMenuView)) as MainMenuView;
+            mainMenuView.onPlayerNameChanged += OnPlayerNameChanged;
         }
 
         private void OnAnonimousSignInFailure()
@@ -401,6 +403,11 @@ namespace TicTacToeOnline.Gameplay
             }
 
             messageView.onCloseButtonPressed += OnAnonimousSignInFailureMessageClosed;
+        }
+
+        private void OnPlayerNameChanged(string playerName)
+        {
+            PlayerName = playerName;
         }
     }
 }

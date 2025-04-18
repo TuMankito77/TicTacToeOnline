@@ -1,8 +1,10 @@
 namespace TicTacToeOnline.Ui.Views
 {
-    using TicTacToeOnline.Networking;
     using UnityEngine;
     using UnityEngine.UI;
+    
+    using TMPro;
+    using System;
 
     public class MainMenuView : BaseView
     {
@@ -11,6 +13,11 @@ namespace TicTacToeOnline.Ui.Views
 
         [SerializeField]
         private Button findSessionButton = null;
+
+        [SerializeField]
+        private TMP_InputField playerNameText = null;
+
+        public Action<string> onPlayerNameChanged = null;
 
         #region Unity Methods
 
@@ -24,14 +31,44 @@ namespace TicTacToeOnline.Ui.Views
 
         private void OnCreateSessionButtonPressed()
         {
+            if(!IsPlayerNameValid())
+            {
+                return;
+            }
+
             viewManager.DisplayView(typeof(CreateSessionView));
             viewManager.RemoveView(GetType());
         }
 
         private void OnFindSessionButtonPressed()
         {
+            if(!IsPlayerNameValid())
+            {
+                return;
+            }
+
             viewManager.DisplayView(typeof(FindSessionView));
             viewManager.RemoveView(GetType());
+        }
+
+        private bool IsPlayerNameValid()
+        {
+            if (string.IsNullOrEmpty(playerNameText.text) || string.IsNullOrWhiteSpace(playerNameText.text))
+            {
+                MessageView messageView = viewManager.DisplayView(typeof(MessageView)) as MessageView;
+
+                if(messageView != null)
+                {
+                    messageView.SetMessageText($"The player name cannot be empty if you to create or find a session.");
+                }
+
+                return false;
+            }
+            else
+            {
+                onPlayerNameChanged?.Invoke(playerNameText.text);
+                return true;
+            }
         }
     }
 }
