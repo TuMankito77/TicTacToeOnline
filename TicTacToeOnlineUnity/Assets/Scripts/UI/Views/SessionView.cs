@@ -1,5 +1,7 @@
 namespace TicTacToeOnline.Ui.Views
 {
+    using System;
+
     using UnityEngine;
     using UnityEngine.UI;
     
@@ -7,6 +9,8 @@ namespace TicTacToeOnline.Ui.Views
     
     using TMPro;
     using TicTacToeOnline.Networking;
+    using Unity.Services.Authentication;
+    using TicTacToeOnline.Gameplay;
 
     public class SessionView : BaseView
     {
@@ -22,19 +26,28 @@ namespace TicTacToeOnline.Ui.Views
         [SerializeField]
         private Button startMatchButton = null;
 
+        [SerializeField]
+        private TextMeshProUGUI sessionStatusText = null;
+
         #region Unity Methods
 
         private void Start()
         {
             startMatchButton.onClick.AddListener(OnStartMatchButtonPressed);
-            UpdateSessionInformation();
+            GameManager.Instance.OnLobbyInformationUpdated += OnLobbyInformationUpdated;
         }
+
+        private void OnDestroy()
+        {
+            startMatchButton.onClick.RemoveListener(OnStartMatchButtonPressed);
+            GameManager.Instance.OnLobbyInformationUpdated -= OnLobbyInformationUpdated;
+        }
+
 
         #endregion
 
-        private void UpdateSessionInformation()
+        public void UpdateSessionInformation(Lobby lobby)
         {
-            Lobby lobby = LobbyManager.Instance.Lobby;
             sessionNameText.text = lobby.Name;
 
             playerANameText.text = lobby.Players[0].Data[LobbyManager.PLAYER_NAME_KEY].Value;
@@ -42,22 +55,19 @@ namespace TicTacToeOnline.Ui.Views
             if (lobby.Players.Count > 1)
             {
                 playerBNameText.text = lobby.Players[1].Data[LobbyManager.PLAYER_NAME_KEY].Value;
+                startMatchButton.enabled = true;
             }
-        }
+            else
+            {
+                startMatchButton.enabled = false;
+                sessionStatusText.text = $"Waiting for opponent to join.";
+            }
 
-        public void SetSessionName(string sessionName)
-        {
-            sessionNameText.text = sessionName;
-        }
-
-        public void SetPlayerAName(string playerAName)
-        {
-            playerANameText.text = playerAName;
-        }
-
-        public void SetPlayerBName(string playerBName)
-        {
-            playerBNameText.text = playerBName;
+            if (AuthenticationService.Instance.PlayerId != lobby.HostId)
+            {
+                startMatchButton.gameObject.SetActive(false);
+                sessionStatusText.text = $"Waiting for host to start the game.";
+            }
         }
 
         private void OnStartMatchButtonPressed()
@@ -65,6 +75,12 @@ namespace TicTacToeOnline.Ui.Views
             viewManager.RemoveView(this.GetType());
             //Send an event to the game manager letting it know that the game has started.
         }
+
+        private void OnLobbyInformationUpdated(object sender, GameManager.OnLobbyInformationUpdatedEventArgs e)
+        {
+            UpdateSessionInformation(e.Lobby);
+        }
+
     }
 }
 

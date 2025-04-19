@@ -9,6 +9,7 @@ namespace TicTacToeOnline.Ui.Views
     
     using TicTacToeOnline.Gameplay;
     using TicTacToeOnline.Networking;
+    using System;
 
     public class CreateSessionView : BaseView
     {
@@ -50,26 +51,8 @@ namespace TicTacToeOnline.Ui.Views
         {
             viewManager.RemoveView(typeof(LoadingView));
             SessionView sessionView = viewManager.DisplayView(typeof(SessionView)) as SessionView;
-
-            if(sessionView == null)
-            {
-                MessageView messageView = viewManager.DisplayView(typeof(MessageView)) as MessageView;
-                messageView.SetMessageText("Something went wrong, please try again.");
-                return;
-            }
-
-
-            sessionView.SetSessionName(lobby.Name);
-
-            Player player = lobby.Players.Find((player) => player.Id == LobbyManager.Instance.GetPlayerId());
-
-            if (player == null)
-            {
-                return;
-            }
-
-            sessionView.SetPlayerAName(player.Data[LobbyManager.PLAYER_NAME_KEY].Value);
-
+            sessionView.UpdateSessionInformation(lobby);
+            GameManager.Instance.CheckForConnectedClients();
             viewManager.RemoveView(GetType());
         }
 

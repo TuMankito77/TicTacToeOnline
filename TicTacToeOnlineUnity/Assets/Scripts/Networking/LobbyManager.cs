@@ -140,17 +140,31 @@ namespace TicTacToeOnline.Networking
 
                 QueryResponse queryResponse = await LobbyService.Instance.QueryLobbiesAsync(GetDefaultQueryOptions());
                 Lobby lobbyFound = queryResponse.Results.Find((lobby) => lobby.Id == lobbyId);
-                
+
                 if (lobbyFound == null)
                 {
                     OnFailure?.Invoke();
                     return;
                 }
 
-                lobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId);
-                OnSuccess(lobby);
+                lobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId, joinLobbyByIdOptions);
+                OnSuccess?.Invoke(lobby);
             }
             catch(Exception e)
+            {
+                OnFailure?.Invoke();
+                Debug.LogError(e.Message);
+            }
+        }
+
+        public async void UpdateLobbyInformation(Action<Lobby> OnSuccess, Action OnFailure)
+        {
+            try
+            {
+                lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
+                OnSuccess?.Invoke(lobby);
+            }
+            catch(LobbyServiceException e)
             {
                 OnFailure?.Invoke();
                 Debug.LogError(e.Message);

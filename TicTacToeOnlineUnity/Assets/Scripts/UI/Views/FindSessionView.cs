@@ -97,26 +97,7 @@ namespace TicTacToeOnline.Ui.Views
         {
             viewManager.RemoveView(typeof(LoadingView));
             SessionView sessionView = viewManager.DisplayView(typeof(SessionView)) as SessionView;
-
-            if (sessionView == null)
-            {
-                MessageView messageView = viewManager.DisplayView(typeof(MessageView)) as MessageView;
-                messageView.SetMessageText("Something went wrong, please try again.");
-                return;
-            }
-
-
-            sessionView.SetSessionName(lobby.Name);
-
-            Player player = lobby.Players.Find((player) => player.Id == LobbyManager.Instance.GetPlayerId());
-
-            if (player == null)
-            {
-                return;
-            }
-
-            sessionView.SetPlayerBName(player.Data[LobbyManager.PLAYER_NAME_KEY].Value);
-
+            sessionView.UpdateSessionInformation(lobby);
             viewManager.RemoveView(GetType());
         }
 
