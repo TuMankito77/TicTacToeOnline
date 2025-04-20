@@ -52,7 +52,6 @@ namespace TicTacToeOnline.Ui.Views
             viewManager.RemoveView(typeof(LoadingView));
             SessionView sessionView = viewManager.DisplayView(typeof(SessionView)) as SessionView;
             sessionView.UpdateSessionInformation(lobby);
-            GameManager.Instance.CheckForConnectedClients();
             viewManager.RemoveView(GetType());
         }
 

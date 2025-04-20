@@ -40,18 +40,6 @@ namespace TicTacToeOnline.Gameplay
                 Winner = winner;
             }
         }
-
-        public event EventHandler<OnLobbyInformationUpdatedEventArgs> OnLobbyInformationUpdated;
-        
-        public class OnLobbyInformationUpdatedEventArgs : EventArgs
-        {
-            public Lobby Lobby { get; private set; }
-
-            public OnLobbyInformationUpdatedEventArgs(Lobby lobby)
-            {
-                Lobby = lobby;
-            }
-        }
         
         public event EventHandler OnGameStarted;
         public event EventHandler OnPlayerTurnUpdated;
@@ -191,7 +179,7 @@ namespace TicTacToeOnline.Gameplay
         {
             base.OnNetworkSpawn();
 
-            /*if(NetworkManager.Singleton.LocalClientId == 0)
+            if (NetworkManager.Singleton.LocalClientId == 0)
             {
                 localPlayerType = PlayerType.Cross;
             }
@@ -200,10 +188,10 @@ namespace TicTacToeOnline.Gameplay
                 localPlayerType = PlayerType.Circle;
             }
 
-            playerTypeTurn.OnValueChanged += 
-                (previousValue, updatedValue) => 
-                { 
-                    OnPlayerTurnUpdated?.Invoke(this, EventArgs.Empty); 
+            playerTypeTurn.OnValueChanged +=
+                (previousValue, updatedValue) =>
+                {
+                    OnPlayerTurnUpdated?.Invoke(this, EventArgs.Empty);
                 };
 
             crossesScore.OnValueChanged +=
@@ -217,19 +205,14 @@ namespace TicTacToeOnline.Gameplay
                 {
                     OnScoresUpdated?.Invoke(this, EventArgs.Empty);
                 };
-            
-            if(IsServer)
+
+            if (IsServer)
             {
                 NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
-            }*/
+            }
         }
 
         #endregion
-
-        public void CheckForConnectedClients()
-        {
-            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
-        }
 
         [Rpc(SendTo.Server)]
         public void ClickedOnGridPositionRpc(Vector2Int gridPosition, Vector2 canvasPosition, PlayerType playerType)
@@ -393,8 +376,6 @@ namespace TicTacToeOnline.Gameplay
 
         private void OnClientConnected(ulong obj)
         {
-            LobbyManager.Instance.UpdateLobbyInformation(OnLobbyInformationUpdateSucess, null);
-
             if (NetworkManager.Singleton.ConnectedClientsList.Count == 2)
             {
                 playerTypeTurn.Value = PlayerType.Circle;
@@ -428,12 +409,6 @@ namespace TicTacToeOnline.Gameplay
         private void OnPlayerNameChanged(string playerName)
         {
             PlayerName = playerName;
-        }
-
-        private void OnLobbyInformationUpdateSucess(Lobby lobby)
-        {
-            OnLobbyInformationUpdatedEventArgs onLobbyInformationUpdatedEventArgs = new OnLobbyInformationUpdatedEventArgs(lobby);
-            OnLobbyInformationUpdated?.Invoke(this, onLobbyInformationUpdatedEventArgs);
         }
     }
 }

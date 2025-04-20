@@ -35,7 +35,8 @@ namespace TicTacToeOnline.Networking
         private bool isPlayerSignedIn = false;
         private bool isLobbyHost = false;
         private Lobby lobby = null;
-        private Coroutine keepLobbyAliveCoroutine;
+        private Coroutine keepLobbyAliveCoroutine = null;
+        private LobbyEventCallbacks lobbyEventCallbacks = null;
 
         public Action OnAnonimousSignInSucess;
         public Action OnAnonimousSignInFail;
@@ -43,10 +44,11 @@ namespace TicTacToeOnline.Networking
         public Lobby Lobby => lobby;
         public bool IsLobbyHost => isLobbyHost;
         public bool IsPlayerSignedIn => IsPlayerSignedIn;
+        public Action<Lobby> onLobbyInformationUpdated = null;
 
         #region Unity Methods
 
-        private void Start()
+        private void Awake()
         {
             if (instance != null && instance != this)
             {
@@ -55,6 +57,11 @@ namespace TicTacToeOnline.Networking
             }
 
             instance = this;
+
+            lobbyEventCallbacks = new LobbyEventCallbacks();
+            lobbyEventCallbacks.LobbyChanged += OnLobbyChanged;
+            lobbyEventCallbacks.KickedFromLobby += OnKickedFromLobby;
+            lobbyEventCallbacks.LobbyEventConnectionStateChanged += OnLobbyEventConnectionStateChanged;
         }
 
         #endregion
@@ -97,6 +104,7 @@ namespace TicTacToeOnline.Networking
                 };
 
                 lobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers, createLobbyOptions);
+                await LobbyService.Instance.SubscribeToLobbyEventsAsync(lobby.Id, lobbyEventCallbacks);
                 keepLobbyAliveCoroutine = StartCoroutine(KeepLobbyAlive());
                 isLobbyHost = true;
                 OnSucess?.Invoke(lobby);
@@ -151,20 +159,6 @@ namespace TicTacToeOnline.Networking
                 OnSuccess?.Invoke(lobby);
             }
             catch(Exception e)
-            {
-                OnFailure?.Invoke();
-                Debug.LogError(e.Message);
-            }
-        }
-
-        public async void UpdateLobbyInformation(Action<Lobby> OnSuccess, Action OnFailure)
-        {
-            try
-            {
-                lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
-                OnSuccess?.Invoke(lobby);
-            }
-            catch(LobbyServiceException e)
             {
                 OnFailure?.Invoke();
                 Debug.LogError(e.Message);
@@ -284,6 +278,36 @@ namespace TicTacToeOnline.Networking
             };
 
             return queryLobbiesOptions;
+        }
+
+        private async void UpdateLobbyInformation()
+        {
+            try
+            {
+                lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
+                onLobbyInformationUpdated?.Invoke(lobby);
+                Debug.Log("Lobby information updated.");
+            }
+            catch (LobbyServiceException e)
+            {
+                Debug.LogError(e.Message);
+            }
+        }
+
+        private void OnLobbyChanged(ILobbyChanges lobbyChanges)
+        {
+            UpdateLobbyInformation();
+            Debug.Log($"The lobby has changed.");
+        }
+
+        private void OnKickedFromLobby()
+        {
+            Debug.Log("You have been kicked out of the lobby.");
+        }
+
+        private void OnLobbyEventConnectionStateChanged(LobbyEventConnectionState lobbyEventConnectionState)
+        {
+            Debug.Log($"The connection state of the lobby changed. {lobbyEventConnectionState}");
         }
     }
 }

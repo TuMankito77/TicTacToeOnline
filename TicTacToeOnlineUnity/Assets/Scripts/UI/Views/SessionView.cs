@@ -1,7 +1,5 @@
 namespace TicTacToeOnline.Ui.Views
 {
-    using System;
-
     using UnityEngine;
     using UnityEngine.UI;
     
@@ -10,7 +8,6 @@ namespace TicTacToeOnline.Ui.Views
     using TMPro;
     using TicTacToeOnline.Networking;
     using Unity.Services.Authentication;
-    using TicTacToeOnline.Gameplay;
 
     public class SessionView : BaseView
     {
@@ -34,15 +31,14 @@ namespace TicTacToeOnline.Ui.Views
         private void Start()
         {
             startMatchButton.onClick.AddListener(OnStartMatchButtonPressed);
-            GameManager.Instance.OnLobbyInformationUpdated += OnLobbyInformationUpdated;
+            LobbyManager.Instance.onLobbyInformationUpdated += OnLobbyInformationUpdated;
         }
 
         private void OnDestroy()
         {
             startMatchButton.onClick.RemoveListener(OnStartMatchButtonPressed);
-            GameManager.Instance.OnLobbyInformationUpdated -= OnLobbyInformationUpdated;
+            LobbyManager.Instance.onLobbyInformationUpdated -= OnLobbyInformationUpdated;
         }
-
 
         #endregion
 
@@ -56,6 +52,7 @@ namespace TicTacToeOnline.Ui.Views
             {
                 playerBNameText.text = lobby.Players[1].Data[LobbyManager.PLAYER_NAME_KEY].Value;
                 startMatchButton.enabled = true;
+                sessionStatusText.text = $"You can start the match now!";
             }
             else
             {
@@ -72,13 +69,13 @@ namespace TicTacToeOnline.Ui.Views
 
         private void OnStartMatchButtonPressed()
         {
-            viewManager.RemoveView(this.GetType());
+            viewManager.RemoveView(GetType());
             //Send an event to the game manager letting it know that the game has started.
         }
 
-        private void OnLobbyInformationUpdated(object sender, GameManager.OnLobbyInformationUpdatedEventArgs e)
+        private void OnLobbyInformationUpdated(Lobby lobby)
         {
-            UpdateSessionInformation(e.Lobby);
+            UpdateSessionInformation(lobby);
         }
 
     }
