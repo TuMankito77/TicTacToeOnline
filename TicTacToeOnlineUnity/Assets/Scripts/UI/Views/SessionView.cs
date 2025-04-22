@@ -70,8 +70,8 @@ namespace TicTacToeOnline.Ui.Views
 
         private void OnStartMatchButtonPressed()
         {
-            viewManager.RemoveView(GetType());
             GameManager.Instance.StartMatch();
+            viewManager.RemoveView(GetType());
         }
 
         private void OnLobbyInformationUpdated(Lobby lobby, LobbyUpdateType lobbyUpdateType)
