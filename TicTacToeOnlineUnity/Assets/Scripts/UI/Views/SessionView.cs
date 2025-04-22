@@ -8,6 +8,7 @@ namespace TicTacToeOnline.Ui.Views
     using TMPro;
     using TicTacToeOnline.Networking;
     using Unity.Services.Authentication;
+    using TicTacToeOnline.Gameplay;
 
     public class SessionView : BaseView
     {
@@ -70,12 +71,24 @@ namespace TicTacToeOnline.Ui.Views
         private void OnStartMatchButtonPressed()
         {
             viewManager.RemoveView(GetType());
-            //Send an event to the game manager letting it know that the game has started.
+            GameManager.Instance.StartMatch();
         }
 
-        private void OnLobbyInformationUpdated(Lobby lobby)
+        private void OnLobbyInformationUpdated(Lobby lobby, LobbyUpdateType lobbyUpdateType)
         {
-            UpdateSessionInformation(lobby);
+            switch(lobbyUpdateType)
+            {
+                case LobbyUpdateType.PlayerJoined:
+                    {
+                        UpdateSessionInformation(lobby);
+                        break;
+                    }
+
+                default:
+                    {
+                        break;
+                    }
+            }
         }
 
     }

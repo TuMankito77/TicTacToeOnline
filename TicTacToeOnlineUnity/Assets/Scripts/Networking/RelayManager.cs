@@ -7,45 +7,16 @@ namespace TicTacToeOnline.Networking
     using Unity.Netcode;
     using Unity.Netcode.Transports.UTP;
 
-    public class RelayManager : MonoBehaviour
+    using TicTacToeOnline.Core;
+    using System;
+
+    public class RelayManager : SingletonBehavior<RelayManager>
     {
-        private static RelayManager instance = null;
-
-        public static RelayManager Instance
-        {
-            get
-            {
-                if(instance == null)
-                {
-                    GameObject relayManagerGO = new GameObject(typeof(RelayManager).Name);
-                    instance = relayManagerGO.AddComponent<RelayManager>();
-                }
-
-                return instance;
-            }
-        }
-
-        #region Unity Methods
-
-        private void Awake()
-        {
-            if(instance != null && instance != this)
-            {
-                Destroy(gameObject);
-                Debug.LogError($"{GetType().Name} - There is an already existing instance of this singleton, this instance will be destroyed.");
-                return;    
-            }
-
-            instance = this;
-        }
-
-        #endregion
-
         /// <summary>
         /// 
         /// </summary>
         /// <param name="maxConnections">Excluding the host. Eg. There are 4 players including the host, the value passsed is 3</param>
-        public async void CreateRelay(int maxConnections)
+        public async void CreateRelay(int maxConnections, Action<string> OnSuccess, Action OnFailure)
         {
             try
             {
@@ -59,6 +30,7 @@ namespace TicTacToeOnline.Networking
                     allocation.Key,
                     allocation.ConnectionData
                 );
+                OnSuccess?.Invoke(joinCode);
                 Debug.Log(joinCode);
             }
             catch(RelayServiceException e)

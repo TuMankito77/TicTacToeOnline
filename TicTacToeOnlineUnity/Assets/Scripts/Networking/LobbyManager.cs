@@ -6,58 +6,32 @@ namespace TicTacToeOnline.Networking
 
     using UnityEngine;
     
-    using Unity.Services.Core;
-    using Unity.Services.Authentication;
     using Unity.Services.Lobbies;
     using Unity.Services.Lobbies.Models;
 
-    public class LobbyManager : MonoBehaviour
+    using TicTacToeOnline.Core;
+
+    public class LobbyManager : SingletonBehavior<LobbyManager>
     {
         public const string PLAYER_NAME_KEY = "PlayerName";
+        public const string RELAY_CODE_KEY = "RelayCode";
 
-        private static LobbyManager instance = null;
-
-        public static LobbyManager Instance
-        {
-            get
-            {
-                if(instance == null)
-                {
-                    GameObject lobbyManagerGO = new GameObject($"{typeof(LobbyManager).Name}");
-                    DontDestroyOnLoad(lobbyManagerGO);
-                    instance = lobbyManagerGO.AddComponent<LobbyManager>();
-                }
-
-                return instance;
-            }
-        }
-
-        private bool isPlayerSignedIn = false;
         private bool isLobbyHost = false;
         private Lobby lobby = null;
         private Coroutine keepLobbyAliveCoroutine = null;
         private LobbyEventCallbacks lobbyEventCallbacks = null;
 
-        public Action OnAnonimousSignInSucess;
-        public Action OnAnonimousSignInFail;
         public Lobby LobbyCreated = null;
         public Lobby Lobby => lobby;
         public bool IsLobbyHost => isLobbyHost;
-        public bool IsPlayerSignedIn => IsPlayerSignedIn;
-        public Action<Lobby> onLobbyInformationUpdated = null;
+        public Action<Lobby, LobbyUpdateType> onLobbyInformationUpdated = null;
+        public string LobbyUpdateTypeKey => typeof(LobbyUpdateType).Name;
 
         #region Unity Methods
 
-        private void Awake()
+        protected override void Awake()
         {
-            if (instance != null && instance != this)
-            {
-                Debug.LogError($"Another instance of the {GetType().Name} was found, this instance will be destroyed.");
-                Destroy(gameObject);
-            }
-
-            instance = this;
-
+            base.Awake();
             lobbyEventCallbacks = new LobbyEventCallbacks();
             lobbyEventCallbacks.LobbyChanged += OnLobbyChanged;
             lobbyEventCallbacks.KickedFromLobby += OnKickedFromLobby;
@@ -65,21 +39,6 @@ namespace TicTacToeOnline.Networking
         }
 
         #endregion
-
-        public async void SignInAnonymously()
-        {
-            try
-            {
-                await UnityServices.InitializeAsync();
-                AuthenticationService.Instance.SignedIn += OnSignedIn;
-                await AuthenticationService.Instance.SignInAnonymouslyAsync();
-            }
-            catch(Exception e)
-            {
-                OnAnonimousSignInFail?.Invoke();
-                Debug.LogError($"{GetType().Name} - {e.Message}");
-            }
-        }
 
         public async void CreateLobby(string lobbyName, string playerName, int maxPlayers, Action<Lobby> OnSucess, Action OnFailure)
         {
@@ -156,6 +115,7 @@ namespace TicTacToeOnline.Networking
                 }
 
                 lobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId, joinLobbyByIdOptions);
+                await LobbyService.Instance.SubscribeToLobbyEventsAsync(lobby.Id, lobbyEventCallbacks);
                 OnSuccess?.Invoke(lobby);
             }
             catch(Exception e)
@@ -165,16 +125,24 @@ namespace TicTacToeOnline.Networking
             }
         }
 
-        public string GetPlayerId()
+        public async void SetLobbyRelayCode(string code, Action OnSuccess, Action OnFailure)
         {
-            return AuthenticationService.Instance.PlayerId;
-        }
+            try
+            {
+                UpdateLobbyOptions updateLobbyOptions = new UpdateLobbyOptions()
+                {
+                    Data = new Dictionary<string, DataObject>()
+                    {
+                        { RELAY_CODE_KEY, new DataObject(DataObject.VisibilityOptions.Member, code) }
+                    }
+                };
 
-        private void OnSignedIn()
-        {
-            isPlayerSignedIn = true;
-            OnAnonimousSignInSucess?.Invoke();
-            Debug.Log($"Signed in as: {AuthenticationService.Instance.PlayerId}");
+                await LobbyService.Instance.UpdateLobbyAsync(lobby.Id, updateLobbyOptions);
+            }
+            catch (LobbyServiceException e)
+            {
+                Debug.LogError(e.Message);
+            }
         }
 
         private async void ListLobbies()
@@ -280,12 +248,12 @@ namespace TicTacToeOnline.Networking
             return queryLobbiesOptions;
         }
 
-        private async void UpdateLobbyInformation()
+        private async void UpdateLobbyInformation(LobbyUpdateType lobbyUpdateType)
         {
             try
             {
                 lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
-                onLobbyInformationUpdated?.Invoke(lobby);
+                onLobbyInformationUpdated?.Invoke(lobby, lobbyUpdateType);
                 Debug.Log("Lobby information updated.");
             }
             catch (LobbyServiceException e)
@@ -296,7 +264,15 @@ namespace TicTacToeOnline.Networking
 
         private void OnLobbyChanged(ILobbyChanges lobbyChanges)
         {
-            UpdateLobbyInformation();
+            if(lobbyChanges.PlayerJoined.Changed)
+            {
+                UpdateLobbyInformation(LobbyUpdateType.PlayerJoined);
+            }
+            if(lobbyChanges.Data.Changed)
+            {
+                UpdateLobbyInformation(LobbyUpdateType.DataChanged);
+            }
+
             Debug.Log($"The lobby has changed.");
         }
 

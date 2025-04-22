@@ -170,9 +170,18 @@ namespace TicTacToeOnline.Gameplay
         private void Start()
         {
             viewManager.DisplayView(typeof(LoadingView));
-            LobbyManager.Instance.OnAnonimousSignInSucess += OnAnonimousSignInSuccess;
-            LobbyManager.Instance.OnAnonimousSignInFail += OnAnonimousSignInFailure;
-            LobbyManager.Instance.SignInAnonymously();
+            OnlineServicesManager.Instance.OnAnonimousSignInSucess += OnAnonimousSignInSuccess;
+            OnlineServicesManager.Instance.OnAnonimousSignInFail += OnAnonimousSignInFailure;
+            OnlineServicesManager.Instance.SignInAnonymously();
+            LobbyManager.Instance.onLobbyInformationUpdated += OnLobbyInformationUpdated;
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            OnlineServicesManager.Instance.OnAnonimousSignInSucess -= OnAnonimousSignInSuccess;
+            OnlineServicesManager.Instance.OnAnonimousSignInFail -= OnAnonimousSignInFailure;
+            LobbyManager.Instance.onLobbyInformationUpdated -= OnLobbyInformationUpdated;
         }
 
         public override void OnNetworkSpawn()
@@ -288,6 +297,21 @@ namespace TicTacToeOnline.Gameplay
             crossesScore = this.crossesScore.Value;
         }
 
+        public void StartMatch()
+        {
+            RelayManager.Instance.CreateRelay(1, OnCreateRelaySuccess, OnCreateRelayFailure);
+        }
+
+        private void OnCreateRelaySuccess(string joinCode)
+        {
+            LobbyManager.Instance.SetLobbyRelayCode(joinCode, null, null);
+        }
+
+        private void OnCreateRelayFailure()
+        {
+
+        }
+
         [Rpc(SendTo.ClientsAndHost)]
         private void SendMatchFinishedInformationRpc(Vector2 middleLineCanvasPosition, LineOrientation lineOrientation, PlayerType winner)
         {
@@ -385,8 +409,8 @@ namespace TicTacToeOnline.Gameplay
         private void OnAnonimousSignInSuccess()
         {
             viewManager.RemoveView(typeof(LoadingView));
-            LobbyManager.Instance.OnAnonimousSignInSucess -= OnAnonimousSignInSuccess;
-            LobbyManager.Instance.OnAnonimousSignInFail -= OnAnonimousSignInFailure;
+            OnlineServicesManager.Instance.OnAnonimousSignInSucess -= OnAnonimousSignInSuccess;
+            OnlineServicesManager.Instance.OnAnonimousSignInFail -= OnAnonimousSignInFailure;
             MainMenuView mainMenuView = viewManager.DisplayView(typeof(MainMenuView)) as MainMenuView;
             mainMenuView.onPlayerNameChanged += OnPlayerNameChanged;
         }
@@ -400,7 +424,7 @@ namespace TicTacToeOnline.Gameplay
             void OnAnonimousSignInFailureMessageClosed()
             {
                 messageView.onCloseButtonPressed -= OnAnonimousSignInFailureMessageClosed;
-                LobbyManager.Instance.SignInAnonymously();
+                OnlineServicesManager.Instance.SignInAnonymously();
             }
 
             messageView.onCloseButtonPressed += OnAnonimousSignInFailureMessageClosed;
@@ -409,6 +433,25 @@ namespace TicTacToeOnline.Gameplay
         private void OnPlayerNameChanged(string playerName)
         {
             PlayerName = playerName;
+        }
+
+        private void OnLobbyInformationUpdated(Lobby lobby, LobbyUpdateType lobbyUpdateType)
+        {
+            switch(lobbyUpdateType)
+            {
+                case LobbyUpdateType.DataChanged:
+                    {
+                        if(OnlineServicesManager.Instance.GetPlayerId() != lobby.HostId)
+                        {
+                            if(lobby.Data.TryGetValue(LobbyManager.RELAY_CODE_KEY, out DataObject RelayCodeDO))
+                            {
+                                RelayManager.Instance.JoinRelay(RelayCodeDO.Value);
+                            }
+                        }
+
+                        break;
+                    }
+            }
         }
     }
 }
