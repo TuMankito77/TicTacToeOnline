@@ -50,6 +50,9 @@ namespace TicTacToeOnline.Gameplay
         [SerializeField]
         private ViewManager viewManager = null;
 
+        [SerializeField]
+        private GameObject mainGameObjs = null;
+
         private static GameManager instance = null;
         private PlayerType localPlayerType = PlayerType.None;
         private GridCellInfo[,] gridCellsInfo = null;
@@ -297,19 +300,26 @@ namespace TicTacToeOnline.Gameplay
             crossesScore = this.crossesScore.Value;
         }
 
-        public void StartMatch()
+        public void StartMatch(Action OnMatchStartSucess, Action OnMatchStartFailure)
         {
-            RelayManager.Instance.CreateRelay(1, OnCreateRelaySuccess, OnCreateRelayFailure);
-        }
-
-        private void OnCreateRelaySuccess(string joinCode)
-        {
-            LobbyManager.Instance.SetLobbyRelayCode(joinCode, null, null);
-        }
-
-        private void OnCreateRelayFailure()
-        {
-
+            RelayManager.Instance.CreateRelay
+            (
+                1,
+                (joinCode) => 
+                {
+                    LobbyManager.Instance.SetLobbyRelayCode
+                    (
+                        joinCode, 
+                        () => 
+                        { 
+                            OnMatchStartSucess?.Invoke();
+                            mainGameObjs.SetActive(true);
+                        }, 
+                        () => { OnMatchStartFailure?.Invoke(); }
+                    );
+                },
+                () => { OnMatchStartFailure?.Invoke();}
+            );
         }
 
         [Rpc(SendTo.ClientsAndHost)]
@@ -445,7 +455,21 @@ namespace TicTacToeOnline.Gameplay
                         {
                             if(lobby.Data.TryGetValue(LobbyManager.RELAY_CODE_KEY, out DataObject RelayCodeDO))
                             {
-                                RelayManager.Instance.JoinRelay(RelayCodeDO.Value);
+                                viewManager.DisplayView(typeof(LoadingView));
+                                RelayManager.Instance.JoinRelay
+                                (
+                                    RelayCodeDO.Value,
+                                    () => 
+                                    { 
+                                        viewManager.RemoveView(typeof(LoadingView));
+                                        viewManager.RemoveView(typeof(SessionView));
+                                        mainGameObjs.SetActive(true);
+                                    },
+                                    () => 
+                                    { 
+                                        viewManager.RemoveView(typeof(LoadingView)); 
+                                    }
+                                );
                             }
                         }
 

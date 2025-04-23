@@ -138,9 +138,11 @@ namespace TicTacToeOnline.Networking
                 };
 
                 await LobbyService.Instance.UpdateLobbyAsync(lobby.Id, updateLobbyOptions);
+                OnSuccess?.Invoke();
             }
             catch (LobbyServiceException e)
             {
+                OnFailure?.Invoke();
                 Debug.LogError(e.Message);
             }
         }

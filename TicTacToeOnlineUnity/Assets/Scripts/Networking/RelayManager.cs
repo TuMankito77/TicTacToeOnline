@@ -30,8 +30,9 @@ namespace TicTacToeOnline.Networking
                     allocation.Key,
                     allocation.ConnectionData
                 );
+                NetworkManager.Singleton.StartHost();
+                Debug.Log($"Relay creater successfully, join code is: {joinCode}");
                 OnSuccess?.Invoke(joinCode);
-                Debug.Log(joinCode);
             }
             catch(RelayServiceException e)
             {
@@ -39,7 +40,7 @@ namespace TicTacToeOnline.Networking
             }
         }
 
-        public async void JoinRelay(string joinCode)
+        public async void JoinRelay(string joinCode, Action OnSuccess, Action OnFailure)
         {
             try
             {
@@ -53,10 +54,14 @@ namespace TicTacToeOnline.Networking
                     joinAllocation.ConnectionData,
                     joinAllocation.HostConnectionData
                 );
+                NetworkManager.Singleton.StartClient();
+                OnSuccess?.Invoke();
+                Debug.Log("Relay joined successfullly.");
             }
             catch(RelayServiceException e)
             {
                 Debug.LogError(e.Message);
+                OnFailure?.Invoke();
             }
         }
     }
