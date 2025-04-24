@@ -51,7 +51,7 @@ namespace TicTacToeOnline.Gameplay
         private ViewManager viewManager = null;
 
         [SerializeField]
-        private GameObject mainGameObjs = null;
+        private CanvasGroup mainGameObjs = null;
 
         private static GameManager instance = null;
         private PlayerType localPlayerType = PlayerType.None;
@@ -313,7 +313,9 @@ namespace TicTacToeOnline.Gameplay
                         () => 
                         { 
                             OnMatchStartSucess?.Invoke();
-                            mainGameObjs.SetActive(true);
+                            mainGameObjs.alpha = 1;
+                            mainGameObjs.interactable = true;
+                            mainGameObjs.blocksRaycasts = true;
                         }, 
                         () => { OnMatchStartFailure?.Invoke(); }
                     );
@@ -463,7 +465,9 @@ namespace TicTacToeOnline.Gameplay
                                     { 
                                         viewManager.RemoveView(typeof(LoadingView));
                                         viewManager.RemoveView(typeof(SessionView));
-                                        mainGameObjs.SetActive(true);
+                                        mainGameObjs.alpha = 1;
+                                        mainGameObjs.interactable = true;
+                                        mainGameObjs.blocksRaycasts = true;
                                     },
                                     () => 
                                     { 
