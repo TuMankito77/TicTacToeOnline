@@ -248,9 +248,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a9b73f0e5f1b944998c09b34b1a2e65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerNameInputField: {fileID: 0}
   matchNameInputField: {fileID: 3175246349108645031}
-  createButton: {fileID: 4335782081365696941}
+  createButton: {fileID: 2948277863992042213}
 --- !u!1001 &4968048616027118604
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -354,15 +353,15 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e71b10fd1ede164fbf9e959c0497b36, type: 3}
---- !u!114 &4335782081365696941 stripped
+--- !u!114 &2948277863992042213 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8708210364650929569, guid: 0e71b10fd1ede164fbf9e959c0497b36, type: 3}
+  m_CorrespondingSourceObject: {fileID: -1434274451510362391, guid: 0e71b10fd1ede164fbf9e959c0497b36, type: 3}
   m_PrefabInstance: {fileID: 4968048616027118604}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: fb9fe04ae96613643b3e288f782c0924, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!224 &8661099078902066184 stripped

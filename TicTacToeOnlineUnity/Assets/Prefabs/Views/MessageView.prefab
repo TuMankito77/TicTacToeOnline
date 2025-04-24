@@ -333,15 +333,15 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4377615788476035076, guid: 0e71b10fd1ede164fbf9e959c0497b36, type: 3}
   m_PrefabInstance: {fileID: 1017076683475615715}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8558148718505869890 stripped
+--- !u!114 &7063068249112117514 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8708210364650929569, guid: 0e71b10fd1ede164fbf9e959c0497b36, type: 3}
+  m_CorrespondingSourceObject: {fileID: -1434274451510362391, guid: 0e71b10fd1ede164fbf9e959c0497b36, type: 3}
   m_PrefabInstance: {fileID: 1017076683475615715}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: fb9fe04ae96613643b3e288f782c0924, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &8147298470452597459
@@ -572,7 +572,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   messageText: {fileID: 371611371489053514}
-  closeMessageButton: {fileID: 8558148718505869890}
+  closeMessageButton: {fileID: 7063068249112117514}
 --- !u!224 &4611359450357539860 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5687995984170890951, guid: 24275b72528f6da4cb91b3957cdd0608, type: 3}
