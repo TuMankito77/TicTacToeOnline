@@ -3,7 +3,6 @@ namespace TicTacToeOnline.Ui.Views
     using System;
     
     using UnityEngine;
-    using UnityEngine.UI;
     
     using TMPro;
 
@@ -13,15 +12,20 @@ namespace TicTacToeOnline.Ui.Views
         private TextMeshProUGUI messageText = null;
 
         [SerializeField]
-        private Button closeMessageButton = null;
+        private BaseButton closeMessageButton = null;
 
         public Action onCloseButtonPressed = null;
 
         #region Unity Methods
 
-        private void Start()
+        private void OnEnable()
         {
-            closeMessageButton.onClick.AddListener(OnCloseMessageButtonPressed);
+            closeMessageButton.onButtonPressed += OnCloseMessageButtonPressed;
+        }
+
+        private void OnDisable()
+        {
+            closeMessageButton.onButtonPressed -= OnCloseMessageButtonPressed;
         }
 
         #endregion

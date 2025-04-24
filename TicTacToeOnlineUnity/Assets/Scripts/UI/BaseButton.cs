@@ -24,6 +24,11 @@ namespace TicTacToeOnline.Ui.Views
             buttonComponent.onClick.AddListener(OnButtonPressed);        
         }
 
+        private void OnDestroy()
+        {
+            buttonComponent.onClick.RemoveListener(OnButtonPressed);
+        }
+
         #endregion
 
         public void SetText(string text)

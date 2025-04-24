@@ -26,14 +26,22 @@ namespace TicTacToeOnline.Ui.Views
         private void Awake()
         {
             sessionButtons = new List<BaseButton>();
+        }
+
+        private void OnEnable()
+        {
             refreshButton.onButtonPressed += OnRefreshButtonPressed;
+        }
+
+        private void OnDisable()
+        {
+            refreshButton.onButtonPressed -= OnRefreshButtonPressed;
         }
 
         private void OnDestroy()
         {
             sessionButtons.Clear();
             sessionButtons = null;
-            refreshButton.onButtonPressed -= OnRefreshButtonPressed;
         }
 
         #endregion

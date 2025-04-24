@@ -1,7 +1,6 @@
 namespace TicTacToeOnline.Ui.Views
 {
     using UnityEngine;
-    using UnityEngine.UI;
     
     using Unity.Services.Lobbies.Models;
     
@@ -22,22 +21,22 @@ namespace TicTacToeOnline.Ui.Views
         private TextMeshProUGUI playerBNameText = null;
 
         [SerializeField]
-        private Button startMatchButton = null;
+        private BaseButton startMatchButton = null;
 
         [SerializeField]
         private TextMeshProUGUI sessionStatusText = null;
 
         #region Unity Methods
 
-        private void Start()
+        private void OnEnable()
         {
-            startMatchButton.onClick.AddListener(OnStartMatchButtonPressed);
+            startMatchButton.onButtonPressed += OnStartMatchButtonPressed;
             LobbyManager.Instance.onLobbyInformationUpdated += OnLobbyInformationUpdated;
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
-            startMatchButton.onClick.RemoveListener(OnStartMatchButtonPressed);
+            startMatchButton.onButtonPressed -= OnStartMatchButtonPressed;
             LobbyManager.Instance.onLobbyInformationUpdated -= OnLobbyInformationUpdated;
         }
 

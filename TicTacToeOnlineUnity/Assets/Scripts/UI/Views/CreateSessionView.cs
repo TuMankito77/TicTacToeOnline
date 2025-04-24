@@ -1,7 +1,6 @@
 namespace TicTacToeOnline.Ui.Views
 {
     using UnityEngine;
-    using UnityEngine.UI;
     
     using Unity.Services.Lobbies.Models;
     
@@ -9,7 +8,6 @@ namespace TicTacToeOnline.Ui.Views
     
     using TicTacToeOnline.Gameplay;
     using TicTacToeOnline.Networking;
-    using System;
 
     public class CreateSessionView : BaseView
     {
@@ -17,13 +15,18 @@ namespace TicTacToeOnline.Ui.Views
         private TMP_InputField matchNameInputField = null;
 
         [SerializeField]
-        private Button createButton = null;
+        private BaseButton createButton = null;
 
         #region Unity Methods
 
-        private void Start()
+        private void OnEnable()
         {
-            createButton.onClick.AddListener(OnCreateButtonPressed);
+            createButton.onButtonPressed += OnCreateButtonPressed;
+        }
+
+        private void OnDisable()
+        {
+            createButton.onButtonPressed -= OnCreateButtonPressed;
         }
 
         #endregion

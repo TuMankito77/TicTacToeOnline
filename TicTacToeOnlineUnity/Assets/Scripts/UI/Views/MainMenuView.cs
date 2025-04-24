@@ -1,7 +1,6 @@
 namespace TicTacToeOnline.Ui.Views
 {
     using UnityEngine;
-    using UnityEngine.UI;
     
     using TMPro;
     using System;
@@ -9,10 +8,10 @@ namespace TicTacToeOnline.Ui.Views
     public class MainMenuView : BaseView
     {
         [SerializeField]
-        private Button createSessionButton = null;
+        private BaseButton createSessionButton = null;
 
         [SerializeField]
-        private Button findSessionButton = null;
+        private BaseButton findSessionButton = null;
 
         [SerializeField]
         private TMP_InputField playerNameText = null;
@@ -21,10 +20,16 @@ namespace TicTacToeOnline.Ui.Views
 
         #region Unity Methods
 
-        private void Start()
+        private void OnEnable()
         {
-            createSessionButton.onClick.AddListener(OnCreateSessionButtonPressed);
-            findSessionButton.onClick.AddListener(OnFindSessionButtonPressed);
+            createSessionButton.onButtonPressed += OnCreateSessionButtonPressed;
+            findSessionButton.onButtonPressed += OnFindSessionButtonPressed;
+        }
+
+        private void OnDestroy()
+        {
+            createSessionButton.onButtonPressed -= OnCreateSessionButtonPressed;
+            findSessionButton.onButtonPressed -= OnFindSessionButtonPressed;
         }
 
         #endregion
