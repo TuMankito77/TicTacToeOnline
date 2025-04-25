@@ -3,12 +3,10 @@ namespace TicTacToeOnline.Ui
     using System.Collections.Generic;
 
     using UnityEngine;
-    
-    using Unity.Netcode;
 
     using TicTacToeOnline.Gameplay;
 
-    public class GameVisualsManager : NetworkBehaviour
+    public class GameVisualsManager : MonoBehaviour
     {
         [SerializeField]
         private GameObject crossPrefab = null;
@@ -100,7 +98,6 @@ namespace TicTacToeOnline.Ui
             SpawnObjectRpc(e.CanvasPosition, e.PlayerType);
         }
 
-        [Rpc(SendTo.ClientsAndHost)]
         private void SpawnObjectRpc(Vector2 canvasPosition, PlayerType playerType)
         {
             GameObject visual = null;

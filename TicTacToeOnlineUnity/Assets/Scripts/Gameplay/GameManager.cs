@@ -265,8 +265,14 @@ namespace TicTacToeOnline.Gameplay
                     }
             }
 
-            OnClickedOnGridPosition?.Invoke(this, new OnClickedOnGridPositionEventArgs(canvasPosition, playerType));
+            SendOnClickedOnGridPositionEventRpc(canvasPosition, playerType);
             TestWinner();
+        }
+
+        [Rpc(SendTo.ClientsAndHost)]
+        private void SendOnClickedOnGridPositionEventRpc(Vector2 canvasPosition, PlayerType playerType)
+        {
+            OnClickedOnGridPosition?.Invoke(this, new OnClickedOnGridPositionEventArgs(canvasPosition, playerType));
         }
 
         [Rpc(SendTo.ClientsAndHost)]
