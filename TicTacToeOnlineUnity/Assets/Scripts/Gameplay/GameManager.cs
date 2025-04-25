@@ -379,7 +379,7 @@ namespace TicTacToeOnline.Gameplay
                     }
 
                     SendMatchFinishedInformationRpc(middleLineCanvasPosition, lineOrientation, winner);
-                    break;
+                    return;
                 }
             }
 

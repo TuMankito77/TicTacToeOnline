@@ -37,11 +37,6 @@ namespace TicTacToeOnline.Ui
 
         private void OnGameRestarted(object sender, System.EventArgs e)
         {
-            if(!IsServer)
-            {
-                return;
-            }
-
             for(int i = 0; i < gridVisuals.Count; i++)
             {
                 Destroy(gridVisuals[i]);
@@ -52,7 +47,7 @@ namespace TicTacToeOnline.Ui
 
         private void OnMatchFinished(object sender, GameManager.OnMatchFinishedEventArgs e)
         {
-            if(!IsServer)
+            if(e.Winner == PlayerType.None)
             {
                 return;
             }
@@ -91,10 +86,8 @@ namespace TicTacToeOnline.Ui
                     }
             }
 
-            GameObject winLineInstance = Instantiate(winLinePrefab);
-            winLineInstance.GetComponent<NetworkObject>().Spawn(true);
+            GameObject winLineInstance = Instantiate(winLinePrefab, transform);
             RectTransform winLineRectTransform = winLineInstance.GetComponent<RectTransform>();
-            winLineRectTransform.SetParent(transform, false);
             winLineRectTransform.position = e.MiddleCellCanvasPosition;
             winLineRectTransform.rotation = Quaternion.Euler(new Vector3(0, 0, eulerZ));
             gridVisuals.Add(winLineInstance);
@@ -107,7 +100,7 @@ namespace TicTacToeOnline.Ui
             SpawnObjectRpc(e.CanvasPosition, e.PlayerType);
         }
 
-        [Rpc(SendTo.Server)]
+        [Rpc(SendTo.ClientsAndHost)]
         private void SpawnObjectRpc(Vector2 canvasPosition, PlayerType playerType)
         {
             GameObject visual = null;
@@ -116,13 +109,13 @@ namespace TicTacToeOnline.Ui
             {
                 case PlayerType.Circle:
                     {
-                        visual = Instantiate(circlePrefab);
+                        visual = Instantiate(circlePrefab, transform);
                         break;
                     }
 
                 case PlayerType.Cross:
                     {
-                        visual = Instantiate(crossPrefab);
+                        visual = Instantiate(crossPrefab, transform);
                         break;
                     }
 
@@ -138,9 +131,7 @@ namespace TicTacToeOnline.Ui
                 return;
             }
             
-            visual.GetComponent<NetworkObject>().Spawn(true);
             RectTransform visualRectTransform = visual.GetComponent<RectTransform>();
-            visualRectTransform.SetParent(transform, false);
             visualRectTransform.position = canvasPosition;
             gridVisuals.Add(visual);
         }
