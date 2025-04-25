@@ -1,4 +1,4 @@
-namespace TicTacToeOnline.Ui
+namespace TicTacToeOnline.Ui.Views
 {
     using UnityEngine;
     using UnityEngine.UI;
@@ -7,7 +7,7 @@ namespace TicTacToeOnline.Ui
     
     using TicTacToeOnline.Gameplay;
 
-    public class GameOverUi : MonoBehaviour
+    public class GameOverView : BaseView
     {
         [SerializeField]
         private TextMeshProUGUI resultsText = null;

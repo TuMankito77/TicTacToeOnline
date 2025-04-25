@@ -1,11 +1,12 @@
-namespace TicTacToeOnline.Ui
+namespace TicTacToeOnline.Ui.Views
 {
     using UnityEngine;
     
     using TMPro;
+
     using TicTacToeOnline.Gameplay;
 
-    public class Hud : MonoBehaviour
+    public class Hud : BaseView
     {
         const string WAITING_FOR_PLAYER_TEXT = "Waiting for oponent to connect.";
         const string LOCAL_PLAYER_TURN_TEXT = "It's your turn:";
