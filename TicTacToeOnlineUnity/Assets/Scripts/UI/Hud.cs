@@ -92,6 +92,8 @@ namespace TicTacToeOnline.Ui.Views
                         break;
                     }
             }
+
+            ForceRebuildLayout();
         }
     }
 }

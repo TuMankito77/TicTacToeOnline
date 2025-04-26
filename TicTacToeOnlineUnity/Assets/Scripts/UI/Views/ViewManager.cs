@@ -4,7 +4,6 @@ namespace TicTacToeOnline.Ui.Views
     using System.Collections.Generic;
 
     using UnityEngine;
-    using UnityEngine.UI;
 
     public class ViewManager : MonoBehaviour
     {
@@ -26,14 +25,7 @@ namespace TicTacToeOnline.Ui.Views
             BaseView viewInstance = Instantiate(viewPrefab, transform);
             viewsDisplayed.Add(viewInstance);
             viewInstance.Initialize(this);
-
-            List<RectTransform> rectTransforms = viewInstance.GetAllRectTransforms();
-
-            foreach(RectTransform rectTransform in rectTransforms)
-            {
-                LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
-            }
-
+            viewInstance.ForceRebuildLayout();
             return viewInstance;
         }
 

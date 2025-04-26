@@ -3,6 +3,7 @@ namespace TicTacToeOnline.Ui.Views
     using System.Collections.Generic;
     
     using UnityEngine;
+    using UnityEngine.UI;
 
     public class BaseView : MonoBehaviour
     {
@@ -24,6 +25,16 @@ namespace TicTacToeOnline.Ui.Views
             }
 
             return rectTransforms;
+        }
+
+        public void ForceRebuildLayout()
+        {
+            List<RectTransform> rectTransforms = GetAllRectTransforms();
+
+            foreach(RectTransform rectTransform in rectTransforms)
+            {
+                LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
+            }
         }
     }
 }

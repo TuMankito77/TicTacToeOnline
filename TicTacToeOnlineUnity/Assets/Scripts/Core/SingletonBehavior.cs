@@ -14,6 +14,7 @@ namespace TicTacToeOnline.Core
                 {
                     GameObject instanceGO = new GameObject(typeof(T).Name);
                     instance = instanceGO.AddComponent<T>();
+                    DontDestroyOnLoad(instanceGO);
                 }
 
                 return instance;
