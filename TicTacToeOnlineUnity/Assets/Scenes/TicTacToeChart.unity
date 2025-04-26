@@ -609,7 +609,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   viewManager: {fileID: 872097256}
-  mainGameObjs: {fileID: 0}
 --- !u!4 &1368015711
 Transform:
   m_ObjectHideFlags: 0

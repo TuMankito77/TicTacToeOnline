@@ -267,6 +267,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -90.3
       objectReference: {fileID: 0}
+    - target: {fileID: 6312163724010310455, guid: 24275b72528f6da4cb91b3957cdd0608, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8586639452763162121, guid: 24275b72528f6da4cb91b3957cdd0608, type: 3}
       propertyPath: m_Name
       value: LoadingView
