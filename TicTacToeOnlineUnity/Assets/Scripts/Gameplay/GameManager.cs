@@ -41,7 +41,7 @@ namespace TicTacToeOnline.Gameplay
             }
         }
         
-        public event EventHandler OnGameStarted;
+        //public event EventHandler OnGameStarted;
         public event EventHandler OnPlayerTurnUpdated;
         public event EventHandler OnGameRestarted;
         public event EventHandler OnScoresUpdated;

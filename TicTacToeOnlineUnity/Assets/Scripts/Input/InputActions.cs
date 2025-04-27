@@ -94,7 +94,7 @@ namespace TicTacToeOnline.Input
             ""id"": ""d44b439c-ed48-4daf-a398-efe94173e751"",
             ""actions"": [
                 {
-                    ""name"": ""New action"",
+                    ""name"": ""GoBack"",
                     ""type"": ""Button"",
                     ""id"": ""27937ad8-8c0c-476b-ae37-e8e010c499aa"",
                     ""expectedControlType"": """",
@@ -111,7 +111,7 @@ namespace TicTacToeOnline.Input
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""New action"",
+                    ""action"": ""GoBack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -122,7 +122,7 @@ namespace TicTacToeOnline.Input
 }");
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
-            m_UI_Newaction = m_UI.FindAction("New action", throwIfNotFound: true);
+            m_UI_GoBack = m_UI.FindAction("GoBack", throwIfNotFound: true);
         }
 
         ~@InputActions()
@@ -203,7 +203,7 @@ namespace TicTacToeOnline.Input
         // UI
         private readonly InputActionMap m_UI;
         private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
-        private readonly InputAction m_UI_Newaction;
+        private readonly InputAction m_UI_GoBack;
         /// <summary>
         /// Provides access to input actions defined in input action map "UI".
         /// </summary>
@@ -216,9 +216,9 @@ namespace TicTacToeOnline.Input
             /// </summary>
             public UIActions(@InputActions wrapper) { m_Wrapper = wrapper; }
             /// <summary>
-            /// Provides access to the underlying input action "UI/Newaction".
+            /// Provides access to the underlying input action "UI/GoBack".
             /// </summary>
-            public InputAction @Newaction => m_Wrapper.m_UI_Newaction;
+            public InputAction @GoBack => m_Wrapper.m_UI_GoBack;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -245,9 +245,9 @@ namespace TicTacToeOnline.Input
             {
                 if (instance == null || m_Wrapper.m_UIActionsCallbackInterfaces.Contains(instance)) return;
                 m_Wrapper.m_UIActionsCallbackInterfaces.Add(instance);
-                @Newaction.started += instance.OnNewaction;
-                @Newaction.performed += instance.OnNewaction;
-                @Newaction.canceled += instance.OnNewaction;
+                @GoBack.started += instance.OnGoBack;
+                @GoBack.performed += instance.OnGoBack;
+                @GoBack.canceled += instance.OnGoBack;
             }
 
             /// <summary>
@@ -259,9 +259,9 @@ namespace TicTacToeOnline.Input
             /// <seealso cref="UIActions" />
             private void UnregisterCallbacks(IUIActions instance)
             {
-                @Newaction.started -= instance.OnNewaction;
-                @Newaction.performed -= instance.OnNewaction;
-                @Newaction.canceled -= instance.OnNewaction;
+                @GoBack.started -= instance.OnGoBack;
+                @GoBack.performed -= instance.OnGoBack;
+                @GoBack.canceled -= instance.OnGoBack;
             }
 
             /// <summary>
@@ -303,12 +303,12 @@ namespace TicTacToeOnline.Input
         public interface IUIActions
         {
             /// <summary>
-            /// Method invoked when associated input action "New action" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// Method invoked when associated input action "GoBack" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
             /// </summary>
             /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-            void OnNewaction(InputAction.CallbackContext context);
+            void OnGoBack(InputAction.CallbackContext context);
         }
     }
 }

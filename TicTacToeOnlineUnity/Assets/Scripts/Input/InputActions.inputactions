@@ -6,7 +6,7 @@
             "id": "d44b439c-ed48-4daf-a398-efe94173e751",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "GoBack",
                     "type": "Button",
                     "id": "27937ad8-8c0c-476b-ae37-e8e010c499aa",
                     "expectedControlType": "",
@@ -23,7 +23,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "GoBack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
