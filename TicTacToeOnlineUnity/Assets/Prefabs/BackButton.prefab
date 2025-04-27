@@ -132,5 +132,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81a11ad9d9b1f444e911ed79ef81dfdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlPathSelected: '*/{Back}'
+  controlPathSelected: '*/{Cancel}'
   linkedButton: {fileID: 1454126944846823135}
