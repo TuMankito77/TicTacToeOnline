@@ -41,8 +41,8 @@ namespace TicTacToeOnline.Ui.Views
                 return;
             }
 
-            viewManager.DisplayView(typeof(CreateSessionView));
-            viewManager.RemoveView(GetType());
+            viewManager.DisplayView<CreateSessionView>();
+            viewManager.RemoveView<MainMenuView>();
         }
 
         private void OnFindSessionButtonPressed()
@@ -52,15 +52,15 @@ namespace TicTacToeOnline.Ui.Views
                 return;
             }
 
-            viewManager.DisplayView(typeof(FindSessionView));
-            viewManager.RemoveView(GetType());
+            viewManager.DisplayView<FindSessionView>();
+            viewManager.RemoveView<MainMenuView>();
         }
 
         private bool IsPlayerNameValid()
         {
             if (string.IsNullOrEmpty(playerNameText.text) || string.IsNullOrWhiteSpace(playerNameText.text))
             {
-                MessageView messageView = viewManager.DisplayView(typeof(MessageView)) as MessageView;
+                MessageView messageView = viewManager.DisplayView<MessageView>();
 
                 if(messageView != null)
                 {

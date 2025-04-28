@@ -38,7 +38,7 @@ namespace TicTacToeOnline.Ui.Views
         private void OnCloseMessageButtonPressed()
         {
             onCloseButtonPressed?.Invoke();
-            viewManager.RemoveView(this.GetType());
+            viewManager.RemoveView<MessageView>();
         }
     }
 }

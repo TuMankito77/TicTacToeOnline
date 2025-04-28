@@ -1,5 +1,7 @@
 namespace TicTacToeOnline.Networking
 {
+    using System;
+    
     using UnityEngine;
     
     using Unity.Services.Relay;
@@ -8,7 +10,6 @@ namespace TicTacToeOnline.Networking
     using Unity.Netcode.Transports.UTP;
 
     using TicTacToeOnline.Core;
-    using System;
 
     public class RelayManager : SingletonBehavior<RelayManager>
     {

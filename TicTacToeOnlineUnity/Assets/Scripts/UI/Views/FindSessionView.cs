@@ -54,7 +54,7 @@ namespace TicTacToeOnline.Ui.Views
 
         public void UpdateSessionsList()
         {
-            viewManager.DisplayView(typeof(LoadingView));
+            viewManager.DisplayView<LoadingView>();
 
             foreach(BaseButton sessionButton in sessionButtons)
             {
@@ -67,7 +67,7 @@ namespace TicTacToeOnline.Ui.Views
 
         private void OnGetLobbiesSuccess(List<Lobby> lobbies)
         {
-            viewManager.RemoveView(typeof(LoadingView));
+            viewManager.RemoveView<LoadingView>();
             
             foreach(Lobby lobby in lobbies)
             {
@@ -77,7 +77,7 @@ namespace TicTacToeOnline.Ui.Views
                 void OnButtonPressed()
                 {
                     sessionButton.onButtonPressed -= OnButtonPressed;
-                    viewManager.DisplayView(typeof(LoadingView));
+                    viewManager.DisplayView<LoadingView>();
                     LobbyManager.Instance.ConnectToLobby(lobby.Id, GameManager.Instance.PlayerName, OnConnectToLobbySuccess, OnConnectToLobbyFailure);
                 }
 
@@ -88,8 +88,8 @@ namespace TicTacToeOnline.Ui.Views
 
         private void OnGetLobbiesFailure()
         {
-            viewManager.RemoveView(typeof(LoadingView));
-            MessageView messageView = viewManager.DisplayView(typeof(MessageView)) as MessageView;
+            viewManager.RemoveView<LoadingView>();
+            MessageView messageView = viewManager.DisplayView<MessageView>();
 
             void OnCloseButtonPressed()
             {
@@ -103,16 +103,16 @@ namespace TicTacToeOnline.Ui.Views
 
         private void OnConnectToLobbySuccess(Lobby lobby)
         {
-            viewManager.RemoveView(typeof(LoadingView));
-            SessionView sessionView = viewManager.DisplayView(typeof(SessionView)) as SessionView;
+            viewManager.RemoveView<LoadingView>();
+            SessionView sessionView = viewManager.DisplayView<SessionView>();
             sessionView.UpdateSessionInformation(lobby);
-            viewManager.RemoveView(GetType());
+            viewManager.RemoveView<FindSessionView>();
         }
 
         private void OnConnectToLobbyFailure()
         {
-            viewManager.RemoveView(typeof(LoadingView));
-            MessageView messageView = viewManager.DisplayView(typeof(MessageView)) as MessageView;
+            viewManager.RemoveView<LoadingView>();
+            MessageView messageView = viewManager.DisplayView<MessageView>();
 
             void OnCloseButtonPressed()
             {

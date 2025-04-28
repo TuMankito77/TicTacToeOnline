@@ -69,20 +69,20 @@ namespace TicTacToeOnline.Ui.Views
 
         private void OnStartMatchButtonPressed()
         {
-            viewManager.DisplayView(typeof(LoadingView));
+            viewManager.DisplayView<LoadingView>();
             GameManager.Instance.StartMatch(OnMatchStartSuccess, OnMatchStartFailure);
         }
 
         private void OnMatchStartSuccess()
         {
-            viewManager.RemoveView(typeof(LoadingView));
-            viewManager.RemoveView(GetType());
+            viewManager.RemoveView<LoadingView>();
+            viewManager.RemoveView<SessionView>();
         }
 
         private void OnMatchStartFailure()
         {
-            viewManager.RemoveView(typeof(LoadingView));
-            MessageView messageView = viewManager.DisplayView(typeof(MessageView)) as MessageView;
+            viewManager.RemoveView<LoadingView>();
+            MessageView messageView = viewManager.DisplayView<MessageView>();
 
             if(messageView)
             {

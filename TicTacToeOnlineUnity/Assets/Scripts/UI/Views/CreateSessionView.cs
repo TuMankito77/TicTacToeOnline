@@ -39,7 +39,7 @@ namespace TicTacToeOnline.Ui.Views
             if(string.IsNullOrEmpty(matchNameInputField.text) || 
                 string.IsNullOrWhiteSpace(matchNameInputField.text))
             {
-                MessageView messageView = viewManager.DisplayView(typeof(MessageView)) as MessageView;
+                MessageView messageView = viewManager.DisplayView<MessageView>();
 
                 if(messageView)
                 {
@@ -49,22 +49,22 @@ namespace TicTacToeOnline.Ui.Views
                 return;
             }
 
-            viewManager.DisplayView(typeof(LoadingView));
+            viewManager.DisplayView<LoadingView>();
             LobbyManager.Instance.CreateLobby(matchNameInputField.text, GameManager.Instance.PlayerName, 2, OnMatchCreationSuccess, OnMatchCreationFailure);
         }
 
         private void OnMatchCreationSuccess(Lobby lobby)
         {
-            viewManager.RemoveView(typeof(LoadingView));
-            SessionView sessionView = viewManager.DisplayView(typeof(SessionView)) as SessionView;
+            viewManager.RemoveView<LoadingView>();
+            SessionView sessionView = viewManager.DisplayView<SessionView>();
             sessionView.UpdateSessionInformation(lobby);
-            viewManager.RemoveView(GetType());
+            viewManager.RemoveView<CreateSessionView>();
         }
 
         private void OnMatchCreationFailure()
         {
-            viewManager.RemoveView(typeof(LoadingView));
-            MessageView messageView = viewManager.DisplayView(typeof(MessageView)) as MessageView;
+            viewManager.RemoveView<LoadingView>();
+            MessageView messageView = viewManager.DisplayView<MessageView>();
 
             if(messageView)
             {
@@ -74,8 +74,8 @@ namespace TicTacToeOnline.Ui.Views
 
         private void OnGoBackActionPerformed()
         {
-            viewManager.RemoveView(GetType());
-            viewManager.DisplayView(typeof(MainMenuView));
+            viewManager.RemoveView<CreateSessionView>();
+            viewManager.DisplayView<MainMenuView>();
         }
     }
 }

@@ -169,16 +169,15 @@ namespace TicTacToeOnline.Gameplay
 
         private void Start()
         {
-            viewManager.DisplayView(typeof(LoadingView));
+            viewManager.DisplayView<LoadingView>();
             OnlineServicesManager.Instance.OnAnonimousSignInSucess += OnAnonimousSignInSuccess;
             OnlineServicesManager.Instance.OnAnonimousSignInFail += OnAnonimousSignInFailure;
             OnlineServicesManager.Instance.SignInAnonymously();
             LobbyManager.Instance.onLobbyInformationUpdated += OnLobbyInformationUpdated;
         }
 
-        public override void OnDestroy()
+        public void OnDisable()
         {
-            base.OnDestroy();
             OnlineServicesManager.Instance.OnAnonimousSignInSucess -= OnAnonimousSignInSuccess;
             OnlineServicesManager.Instance.OnAnonimousSignInFail -= OnAnonimousSignInFailure;
             LobbyManager.Instance.onLobbyInformationUpdated -= OnLobbyInformationUpdated;
@@ -316,9 +315,9 @@ namespace TicTacToeOnline.Gameplay
                         () => 
                         { 
                             OnMatchStartSucess?.Invoke();
-                            viewManager.DisplayView(typeof(GridView));
-                            viewManager.DisplayView(typeof(Hud));
-                            viewManager.DisplayView(typeof(GameOverView));
+                            viewManager.DisplayView<GridView>();
+                            viewManager.DisplayView<Hud>();
+                            viewManager.DisplayView<GameOverView>();
                         }, 
                         () => { OnMatchStartFailure?.Invoke(); }
                     );
@@ -423,17 +422,17 @@ namespace TicTacToeOnline.Gameplay
 
         private void OnAnonimousSignInSuccess()
         {
-            viewManager.RemoveView(typeof(LoadingView));
+            viewManager.RemoveView<LoadingView>();
             OnlineServicesManager.Instance.OnAnonimousSignInSucess -= OnAnonimousSignInSuccess;
             OnlineServicesManager.Instance.OnAnonimousSignInFail -= OnAnonimousSignInFailure;
-            MainMenuView mainMenuView = viewManager.DisplayView(typeof(MainMenuView)) as MainMenuView;
+            MainMenuView mainMenuView = viewManager.DisplayView<MainMenuView>();
             mainMenuView.onPlayerNameChanged += OnPlayerNameChanged;
         }
 
         private void OnAnonimousSignInFailure()
         {
-            viewManager.RemoveView(typeof(LoadingView));
-            MessageView messageView = viewManager.DisplayView(typeof(MessageView)) as MessageView;
+            viewManager.RemoveView<LoadingView>();
+            MessageView messageView = viewManager.DisplayView<MessageView>();
             messageView.SetMessageText("Failed to connect to online services. Press the button below to try again.");
 
             void OnAnonimousSignInFailureMessageClosed()
@@ -460,21 +459,21 @@ namespace TicTacToeOnline.Gameplay
                         {
                             if(lobby.Data.TryGetValue(LobbyManager.RELAY_CODE_KEY, out DataObject RelayCodeDO))
                             {
-                                viewManager.DisplayView(typeof(LoadingView));
+                                viewManager.DisplayView<LoadingView>();
                                 RelayManager.Instance.JoinRelay
                                 (
                                     RelayCodeDO.Value,
                                     () => 
                                     { 
-                                        viewManager.RemoveView(typeof(LoadingView));
-                                        viewManager.RemoveView(typeof(SessionView));
-                                        viewManager.DisplayView(typeof(GridView));
-                                        viewManager.DisplayView(typeof(Hud));
-                                        viewManager.DisplayView(typeof(GameOverView));
+                                        viewManager.RemoveView<LoadingView>();
+                                        viewManager.RemoveView<SessionView>();
+                                        viewManager.DisplayView<GridView>();
+                                        viewManager.DisplayView<Hud>();
+                                        viewManager.DisplayView<GameOverView>();
                                     },
                                     () => 
                                     { 
-                                        viewManager.RemoveView(typeof(LoadingView)); 
+                                        viewManager.RemoveView<LoadingView>(); 
                                     }
                                 );
                             }

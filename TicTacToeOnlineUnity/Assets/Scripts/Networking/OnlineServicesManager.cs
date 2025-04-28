@@ -1,11 +1,13 @@
 namespace TicTacToeOnline.Networking
 {
+    using System;
+    
     using UnityEngine;
 
-    using TicTacToeOnline.Core;
-    using System;
     using Unity.Services.Authentication;
     using Unity.Services.Core;
+    
+    using TicTacToeOnline.Core;
 
     public class OnlineServicesManager : SingletonBehavior<OnlineServicesManager>
     {

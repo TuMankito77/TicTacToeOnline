@@ -12,13 +12,13 @@ namespace TicTacToeOnline.Ui.Views
 
         private List<BaseView> viewsDisplayed = new List<BaseView>(0);
 
-        public BaseView DisplayView(Type viewType)
+        public T DisplayView<T>() where T : BaseView
         {
-            BaseView viewPrefab = viewPrefabs.Find((view) => view.GetType() == viewType);
+            BaseView viewPrefab = viewPrefabs.Find((view) => view.GetType() == typeof(T));
             
             if(viewPrefab == null)
             {
-                Debug.LogError($"{viewType} not found.");
+                Debug.LogError($"{typeof(T).Name} not found.");
                 return null;
             }
 
@@ -26,12 +26,12 @@ namespace TicTacToeOnline.Ui.Views
             viewsDisplayed.Add(viewInstance);
             viewInstance.Initialize(this);
             viewInstance.ForceRebuildLayout();
-            return viewInstance;
+            return viewInstance as T;
         }
 
-        public void RemoveView(Type viewType)
+        public void RemoveView<T>() where T : BaseView
         {
-            BaseView viewInstance = viewsDisplayed.FindLast((view) => view.GetType() == viewType);
+            BaseView viewInstance = viewsDisplayed.FindLast((view) => view.GetType() == typeof(T));
 
             if(viewInstance == null)
             {
