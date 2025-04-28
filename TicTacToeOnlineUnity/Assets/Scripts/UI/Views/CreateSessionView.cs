@@ -74,8 +74,8 @@ namespace TicTacToeOnline.Ui.Views
 
         private void OnGoBackActionPerformed()
         {
-            viewManager.RemoveView<CreateSessionView>();
             viewManager.DisplayView<MainMenuView>();
+            viewManager.RemoveView<CreateSessionView>();
         }
     }
 }

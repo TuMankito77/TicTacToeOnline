@@ -16,14 +16,12 @@ namespace TicTacToeOnline.Networking
         public const string PLAYER_NAME_KEY = "PlayerName";
         public const string RELAY_CODE_KEY = "RelayCode";
 
-        private bool isLobbyHost = false;
-        private Lobby lobby = null;
         private Coroutine keepLobbyAliveCoroutine = null;
         private LobbyEventCallbacks lobbyEventCallbacks = null;
 
         public Lobby LobbyCreated = null;
-        public Lobby Lobby => lobby;
-        public bool IsLobbyHost => isLobbyHost;
+        public bool IsLobbyHost { get; private set; } = false;
+        public Lobby Lobby { get; private set; } = null;
         public Action<Lobby, LobbyUpdateType> onLobbyInformationUpdated = null;
         public string LobbyUpdateTypeKey => typeof(LobbyUpdateType).Name;
 
@@ -62,12 +60,12 @@ namespace TicTacToeOnline.Networking
                     }
                 };
 
-                lobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers, createLobbyOptions);
-                await LobbyService.Instance.SubscribeToLobbyEventsAsync(lobby.Id, lobbyEventCallbacks);
+                Lobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers, createLobbyOptions);
+                await LobbyService.Instance.SubscribeToLobbyEventsAsync(Lobby.Id, lobbyEventCallbacks);
                 keepLobbyAliveCoroutine = StartCoroutine(KeepLobbyAlive());
-                isLobbyHost = true;
-                OnSucess?.Invoke(lobby);
-                Debug.Log($"Lobby created successfully! Lobby name: {lobby.Name} - Max number of players: {lobby.MaxPlayers}");
+                IsLobbyHost = true;
+                OnSucess?.Invoke(Lobby);
+                Debug.Log($"Lobby created successfully! Lobby name: {Lobby.Name} - Max number of players: {Lobby.MaxPlayers}");
             }
             catch(LobbyServiceException e)
             {
@@ -114,9 +112,9 @@ namespace TicTacToeOnline.Networking
                     return;
                 }
 
-                lobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId, joinLobbyByIdOptions);
-                await LobbyService.Instance.SubscribeToLobbyEventsAsync(lobby.Id, lobbyEventCallbacks);
-                OnSuccess?.Invoke(lobby);
+                Lobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId, joinLobbyByIdOptions);
+                await LobbyService.Instance.SubscribeToLobbyEventsAsync(Lobby.Id, lobbyEventCallbacks);
+                OnSuccess?.Invoke(Lobby);
             }
             catch(Exception e)
             {
@@ -137,12 +135,43 @@ namespace TicTacToeOnline.Networking
                     }
                 };
 
-                await LobbyService.Instance.UpdateLobbyAsync(lobby.Id, updateLobbyOptions);
+                await LobbyService.Instance.UpdateLobbyAsync(Lobby.Id, updateLobbyOptions);
                 OnSuccess?.Invoke();
             }
             catch (LobbyServiceException e)
             {
                 OnFailure?.Invoke();
+                Debug.LogError(e.Message);
+            }
+        }
+
+        public async void DestroyLobby(string lobbyId)
+        {
+            try
+            {
+                if(keepLobbyAliveCoroutine != null)
+                {
+                    StopCoroutine(keepLobbyAliveCoroutine);
+                    keepLobbyAliveCoroutine = null;
+                }
+
+                Lobby = null;
+                await LobbyService.Instance.DeleteLobbyAsync(lobbyId);
+            }
+            catch(LobbyServiceException e)
+            {
+                Debug.LogError(e.Message);
+            }
+        }
+
+        public async void DisconnectFromLobby(string lobbyId)
+        {
+            try
+            {
+                //Add the logic needed to disconnect from a lobby
+            }
+            catch(LobbyServiceException e)
+            {
                 Debug.LogError(e.Message);
             }
         }
@@ -191,9 +220,9 @@ namespace TicTacToeOnline.Networking
                     return;
                 }
 
-                lobby = await LobbyService.Instance.JoinLobbyByIdAsync(queryResponse.Results[0].Id);
+                Lobby = await LobbyService.Instance.JoinLobbyByIdAsync(queryResponse.Results[0].Id);
 
-                Debug.Log($"Joined to lobby successfully! Lobby name: {lobby.Name} - Max number of players: {lobby.MaxPlayers}");
+                Debug.Log($"Joined to lobby successfully! Lobby name: {Lobby.Name} - Max number of players: {Lobby.MaxPlayers}");
             }
             catch(LobbyServiceException e)
             {
@@ -205,7 +234,7 @@ namespace TicTacToeOnline.Networking
         {
             yield return new WaitForSeconds(15);
 
-            if(lobby != null)
+            if(Lobby != null)
             {
                 SendLobbyHeartbeat();
             }
@@ -215,7 +244,7 @@ namespace TicTacToeOnline.Networking
         {
             try
             {
-                await LobbyService.Instance.SendHeartbeatPingAsync(lobby.Id);
+                await LobbyService.Instance.SendHeartbeatPingAsync(Lobby.Id);
                 keepLobbyAliveCoroutine = StartCoroutine(KeepLobbyAlive());
                 Debug.Log("Heartbeat sent");
             }
@@ -229,7 +258,7 @@ namespace TicTacToeOnline.Networking
         {
             try
             {
-                lobby = await LobbyService.Instance.QuickJoinLobbyAsync();
+                Lobby = await LobbyService.Instance.QuickJoinLobbyAsync();
             }
             catch(LobbyServiceException e)
             {
@@ -254,8 +283,8 @@ namespace TicTacToeOnline.Networking
         {
             try
             {
-                lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
-                onLobbyInformationUpdated?.Invoke(lobby, lobbyUpdateType);
+                Lobby = await LobbyService.Instance.GetLobbyAsync(Lobby.Id);
+                onLobbyInformationUpdated?.Invoke(Lobby, lobbyUpdateType);
                 Debug.Log("Lobby information updated.");
             }
             catch (LobbyServiceException e)

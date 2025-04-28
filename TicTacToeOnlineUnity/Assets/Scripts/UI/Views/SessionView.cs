@@ -3,11 +3,13 @@ namespace TicTacToeOnline.Ui.Views
     using UnityEngine;
     
     using Unity.Services.Lobbies.Models;
+    using Unity.Services.Authentication;
     
     using TMPro;
+   
     using TicTacToeOnline.Networking;
-    using Unity.Services.Authentication;
     using TicTacToeOnline.Gameplay;
+    using TicTacToeOnline.Input;
 
     public class SessionView : BaseView
     {
@@ -32,12 +34,14 @@ namespace TicTacToeOnline.Ui.Views
         {
             startMatchButton.onButtonPressed += OnStartMatchButtonPressed;
             LobbyManager.Instance.onLobbyInformationUpdated += OnLobbyInformationUpdated;
+            InputManager.Instance.onGoBackActionPerformed += OnGoBackActionPerformed;
         }
 
         private void OnDisable()
         {
             startMatchButton.onButtonPressed -= OnStartMatchButtonPressed;
             LobbyManager.Instance.onLobbyInformationUpdated -= OnLobbyInformationUpdated;
+            InputManager.Instance.onGoBackActionPerformed -= OnGoBackActionPerformed;
         }
 
         #endregion
@@ -107,6 +111,20 @@ namespace TicTacToeOnline.Ui.Views
             }
         }
 
+        private void OnGoBackActionPerformed()
+        {
+            if(LobbyManager.Instance.IsLobbyHost)
+            {
+                LobbyManager.Instance.DestroyLobby(LobbyManager.Instance.Lobby.Id);
+            }
+            else
+            {
+                LobbyManager.Instance.DisconnectFromLobby(LobbyManager.Instance.Lobby.Id);
+            }
+
+            viewManager.DisplayView<FindSessionView>();
+            viewManager.RemoveView<SessionView>();
+        }
     }
 }
 

@@ -7,6 +7,7 @@ namespace TicTacToeOnline.Ui.Views
     
     using TicTacToeOnline.Networking;
     using TicTacToeOnline.Gameplay;
+    using TicTacToeOnline.Input;
 
     public class FindSessionView : BaseView
     {
@@ -31,11 +32,13 @@ namespace TicTacToeOnline.Ui.Views
         private void OnEnable()
         {
             refreshButton.onButtonPressed += OnRefreshButtonPressed;
+            InputManager.Instance.onGoBackActionPerformed += OnGoBackActionPerformed;
         }
 
         private void OnDisable()
         {
             refreshButton.onButtonPressed -= OnRefreshButtonPressed;
+            InputManager.Instance.onGoBackActionPerformed -= OnGoBackActionPerformed;
         }
 
         private void OnDestroy()
@@ -127,6 +130,12 @@ namespace TicTacToeOnline.Ui.Views
         private void OnRefreshButtonPressed()
         {
             UpdateSessionsList();
+        }
+
+        private void OnGoBackActionPerformed()
+        {
+            viewManager.DisplayView<MainMenuView>();
+            viewManager.RemoveView<FindSessionView>();
         }
     }
 }
