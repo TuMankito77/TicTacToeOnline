@@ -15,14 +15,15 @@ namespace TicTacToeOnline.Networking
     {
         public const string PLAYER_NAME_KEY = "PlayerName";
         public const string RELAY_CODE_KEY = "RelayCode";
+        
+        public Action<Lobby, LobbyUpdateType> onLobbyInformationUpdated = null;
+        public Action onKickedFromLobby = null;
 
         private Coroutine keepLobbyAliveCoroutine = null;
         private LobbyEventCallbacks lobbyEventCallbacks = null;
-
-        public Lobby LobbyCreated = null;
+        
         public bool IsLobbyHost { get; private set; } = false;
         public Lobby Lobby { get; private set; } = null;
-        public Action<Lobby, LobbyUpdateType> onLobbyInformationUpdated = null;
         public string LobbyUpdateTypeKey => typeof(LobbyUpdateType).Name;
 
         #region Unity Methods
@@ -164,11 +165,11 @@ namespace TicTacToeOnline.Networking
             }
         }
 
-        public async void DisconnectFromLobby(string lobbyId)
+        public async void DisconnectFromLobby(string lobbyId, string playerId)
         {
             try
             {
-                //Add the logic needed to disconnect from a lobby
+                await LobbyService.Instance.RemovePlayerAsync(lobbyId, playerId);
             }
             catch(LobbyServiceException e)
             {
@@ -309,6 +310,7 @@ namespace TicTacToeOnline.Networking
 
         private void OnKickedFromLobby()
         {
+            onKickedFromLobby?.Invoke();
             Debug.Log("You have been kicked out of the lobby.");
         }
 

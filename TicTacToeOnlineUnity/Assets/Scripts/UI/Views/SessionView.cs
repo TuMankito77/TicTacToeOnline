@@ -3,7 +3,6 @@ namespace TicTacToeOnline.Ui.Views
     using UnityEngine;
     
     using Unity.Services.Lobbies.Models;
-    using Unity.Services.Authentication;
     
     using TMPro;
    
@@ -64,10 +63,11 @@ namespace TicTacToeOnline.Ui.Views
                 sessionStatusText.text = $"Waiting for opponent to join.";
             }
 
-            if (AuthenticationService.Instance.PlayerId != lobby.HostId)
+            if (!LobbyManager.Instance.IsLobbyHost)
             {
                 startMatchButton.gameObject.SetActive(false);
                 sessionStatusText.text = $"Waiting for host to start the game.";
+                LobbyManager.Instance.onKickedFromLobby += OnKickedFromLobby;
             }
         }
 
@@ -116,14 +116,31 @@ namespace TicTacToeOnline.Ui.Views
             if(LobbyManager.Instance.IsLobbyHost)
             {
                 LobbyManager.Instance.DestroyLobby(LobbyManager.Instance.Lobby.Id);
+                viewManager.DisplayView<CreateSessionView>();
             }
             else
             {
-                LobbyManager.Instance.DisconnectFromLobby(LobbyManager.Instance.Lobby.Id);
+                LobbyManager.Instance.onKickedFromLobby -= OnKickedFromLobby;
+                LobbyManager.Instance.DisconnectFromLobby(LobbyManager.Instance.Lobby.Id, OnlineServicesManager.Instance.GetPlayerId());
+                viewManager.DisplayView<FindSessionView>();
             }
 
-            viewManager.DisplayView<FindSessionView>();
             viewManager.RemoveView<SessionView>();
+        }
+
+        private void OnKickedFromLobby()
+        {
+            MessageView messageView = viewManager.DisplayView<MessageView>();
+            messageView.SetMessageText($"Sorry, the match was closed. Please, try to find another match.");
+
+            void OnCloseButtonPressed()
+            {
+                messageView.onCloseButtonPressed -= OnCloseButtonPressed;
+                viewManager.DisplayView<FindSessionView>();
+                viewManager.RemoveView<SessionView>();
+            }
+
+            messageView.onCloseButtonPressed += OnCloseButtonPressed;
         }
     }
 }
