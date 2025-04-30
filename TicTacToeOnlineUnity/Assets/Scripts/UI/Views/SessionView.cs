@@ -113,19 +113,30 @@ namespace TicTacToeOnline.Ui.Views
 
         private void OnGoBackActionPerformed()
         {
-            if(LobbyManager.Instance.IsLobbyHost)
+            MessageView messageView = viewManager.DisplayView<MessageView>();
+            messageView.SetMessageText("Are you sure you want to exit the match?");
+            messageView.ActivateCloseMessageButtonCancel();
+
+            void OnClosebuttonOkPressed()
             {
-                LobbyManager.Instance.DestroyLobby(LobbyManager.Instance.Lobby.Id);
-                viewManager.DisplayView<CreateSessionView>();
-            }
-            else
-            {
-                LobbyManager.Instance.onKickedFromLobby -= OnKickedFromLobby;
-                LobbyManager.Instance.DisconnectFromLobby(LobbyManager.Instance.Lobby.Id, OnlineServicesManager.Instance.GetPlayerId());
-                viewManager.DisplayView<FindSessionView>();
+                messageView.onCloseButtonOkPressed -= OnClosebuttonOkPressed;
+                
+                if (LobbyManager.Instance.IsLobbyHost)
+                {
+                    LobbyManager.Instance.DestroyLobby(LobbyManager.Instance.Lobby.Id);
+                    viewManager.DisplayView<CreateSessionView>();
+                }
+                else
+                {
+                    LobbyManager.Instance.onKickedFromLobby -= OnKickedFromLobby;
+                    LobbyManager.Instance.DisconnectFromLobby(LobbyManager.Instance.Lobby.Id, OnlineServicesManager.Instance.GetPlayerId());
+                    viewManager.DisplayView<FindSessionView>();
+                }
+
+                viewManager.RemoveView<SessionView>();
             }
 
-            viewManager.RemoveView<SessionView>();
+            messageView.onCloseButtonOkPressed += OnClosebuttonOkPressed;
         }
 
         private void OnKickedFromLobby()
@@ -135,12 +146,12 @@ namespace TicTacToeOnline.Ui.Views
 
             void OnCloseButtonPressed()
             {
-                messageView.onCloseButtonPressed -= OnCloseButtonPressed;
+                messageView.onCloseButtonOkPressed -= OnCloseButtonPressed;
                 viewManager.DisplayView<FindSessionView>();
                 viewManager.RemoveView<SessionView>();
             }
 
-            messageView.onCloseButtonPressed += OnCloseButtonPressed;
+            messageView.onCloseButtonOkPressed += OnCloseButtonPressed;
         }
     }
 }

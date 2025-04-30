@@ -96,11 +96,11 @@ namespace TicTacToeOnline.Ui.Views
 
             void OnCloseButtonPressed()
             {
-                messageView.onCloseButtonPressed -= OnCloseButtonPressed;
+                messageView.onCloseButtonOkPressed -= OnCloseButtonPressed;
                 UpdateSessionsList();
             }
 
-            messageView.onCloseButtonPressed += OnCloseButtonPressed;
+            messageView.onCloseButtonOkPressed += OnCloseButtonPressed;
             messageView.SetMessageText("Failed to get the list from the server, click on the button to try again.");
         }
 
@@ -119,11 +119,11 @@ namespace TicTacToeOnline.Ui.Views
 
             void OnCloseButtonPressed()
             {
-                messageView.onCloseButtonPressed -= OnCloseButtonPressed;
+                messageView.onCloseButtonOkPressed -= OnCloseButtonPressed;
                 UpdateSessionsList();
             }
 
-            messageView.onCloseButtonPressed += OnCloseButtonPressed;
+            messageView.onCloseButtonOkPressed += OnCloseButtonPressed;
             messageView.SetMessageText("Could not connect to server.");
         }
 

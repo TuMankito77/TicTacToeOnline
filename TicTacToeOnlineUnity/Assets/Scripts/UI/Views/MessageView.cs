@@ -12,20 +12,26 @@ namespace TicTacToeOnline.Ui.Views
         private TextMeshProUGUI messageText = null;
 
         [SerializeField]
-        private BaseButton closeMessageButton = null;
+        private BaseButton closeMessageButtonOk = null;
 
-        public Action onCloseButtonPressed = null;
+        [SerializeField]
+        private BaseButton closeMessageButtonCancel = null;
+
+        public Action onCloseButtonOkPressed = null;
+        public Action onCloseButtonCancelPressed = null;
 
         #region Unity Methods
 
         private void OnEnable()
         {
-            closeMessageButton.onButtonPressed += OnCloseMessageButtonPressed;
+            closeMessageButtonOk.onButtonPressed += OnCloseMessageButtonOkPressed;
+            closeMessageButtonCancel.onButtonPressed += OnCloseMessageButtonCancelPressed;
         }
 
         private void OnDisable()
         {
-            closeMessageButton.onButtonPressed -= OnCloseMessageButtonPressed;
+            closeMessageButtonOk.onButtonPressed -= OnCloseMessageButtonOkPressed;
+            closeMessageButtonCancel.onButtonPressed -= onCloseButtonCancelPressed;
         }
 
         #endregion
@@ -35,9 +41,21 @@ namespace TicTacToeOnline.Ui.Views
             messageText.text = message;
         }
 
-        private void OnCloseMessageButtonPressed()
+        public void ActivateCloseMessageButtonCancel()
         {
-            onCloseButtonPressed?.Invoke();
+            closeMessageButtonCancel.gameObject.SetActive(true);
+            ForceRebuildLayout();
+        }
+
+        private void OnCloseMessageButtonOkPressed()
+        {
+            onCloseButtonOkPressed?.Invoke();
+            viewManager.RemoveView<MessageView>();
+        }
+
+        private void OnCloseMessageButtonCancelPressed()
+        {
+            onCloseButtonCancelPressed?.Invoke();
             viewManager.RemoveView<MessageView>();
         }
     }

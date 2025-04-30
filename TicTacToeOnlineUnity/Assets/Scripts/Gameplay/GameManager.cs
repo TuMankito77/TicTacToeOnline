@@ -437,11 +437,11 @@ namespace TicTacToeOnline.Gameplay
 
             void OnAnonimousSignInFailureMessageClosed()
             {
-                messageView.onCloseButtonPressed -= OnAnonimousSignInFailureMessageClosed;
+                messageView.onCloseButtonOkPressed -= OnAnonimousSignInFailureMessageClosed;
                 OnlineServicesManager.Instance.SignInAnonymously();
             }
 
-            messageView.onCloseButtonPressed += OnAnonimousSignInFailureMessageClosed;
+            messageView.onCloseButtonOkPressed += OnAnonimousSignInFailureMessageClosed;
         }
 
         private void OnPlayerNameChanged(string playerName)
