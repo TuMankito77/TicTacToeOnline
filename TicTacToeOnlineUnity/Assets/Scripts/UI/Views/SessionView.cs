@@ -54,12 +54,13 @@ namespace TicTacToeOnline.Ui.Views
             if (lobby.Players.Count > 1)
             {
                 playerBNameText.text = lobby.Players[1].Data[LobbyManager.PLAYER_NAME_KEY].Value;
-                startMatchButton.enabled = true;
+                startMatchButton.gameObject.SetActive(true);
                 sessionStatusText.text = $"You can start the match now!";
             }
             else
             {
-                startMatchButton.enabled = false;
+                playerBNameText.text = $"Player B";
+                startMatchButton.gameObject.SetActive(false);
                 sessionStatusText.text = $"Waiting for opponent to join.";
             }
 
@@ -99,6 +100,11 @@ namespace TicTacToeOnline.Ui.Views
             switch(lobbyUpdateType)
             {
                 case LobbyUpdateType.PlayerJoined:
+                    {
+                        UpdateSessionInformation(lobby);
+                        break;
+                    }
+                case LobbyUpdateType.PlayerLeft:
                     {
                         UpdateSessionInformation(lobby);
                         break;

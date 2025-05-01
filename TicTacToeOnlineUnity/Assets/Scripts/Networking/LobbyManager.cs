@@ -304,6 +304,10 @@ namespace TicTacToeOnline.Networking
             {
                 UpdateLobbyInformation(LobbyUpdateType.DataChanged);
             }
+            if(lobbyChanges.PlayerLeft.Changed)
+            {
+                UpdateLobbyInformation(LobbyUpdateType.PlayerLeft);
+            }
 
             Debug.Log($"The lobby has changed.");
         }

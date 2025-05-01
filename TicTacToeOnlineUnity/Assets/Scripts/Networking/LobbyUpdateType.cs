@@ -4,7 +4,8 @@ namespace TicTacToeOnline.Networking
     {
         None,
         PlayerJoined,
-        DataChanged
+        DataChanged,
+        PlayerLeft
     }
 }
 
