@@ -89,7 +89,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   duration: 0.5
-  fillAnimCurve:
+  transitionAnimCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
