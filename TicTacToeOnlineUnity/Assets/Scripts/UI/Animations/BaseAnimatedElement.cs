@@ -19,14 +19,18 @@ namespace TicTacToeOnline.Ui.Animations
 
         public void PlayAnimation()
         {
-            if(playMarkAnimationCoroutine != null)
+            StopAnimation();
+            PreAnimateElement();
+            playMarkAnimationCoroutine = StartCoroutine(StartTransition());
+        }
+
+        public void StopAnimation()
+        {
+            if (playMarkAnimationCoroutine != null)
             {
                 StopCoroutine(playMarkAnimationCoroutine);
                 playMarkAnimationCoroutine = null;
             }
-
-            PreAnimateElement();
-            playMarkAnimationCoroutine = StartCoroutine(StartTransition());
         }
 
         protected virtual void PreAnimateElement()
@@ -45,27 +49,37 @@ namespace TicTacToeOnline.Ui.Animations
 
         private IEnumerator StartTransition()
         {
+            int keysLength = transitionAnimCurve.keys.Length;
+            
             if (duration <= 0 && playMarkAnimationCoroutine != null)
             {
-                OnAnimateElementUpdate(1);
+                OnAnimateElementUpdate(transitionAnimCurve.keys[keysLength - 1].value);
                 onAnimationFinished?.Invoke();
                 StopCoroutine(playMarkAnimationCoroutine);
                 yield return null;
             }
 
             float timeTranscurred = 0;
-            float transitionValue = 0;
+            float transitionValue = transitionAnimCurve.keys[0].value;
+
+            float animCurveStartTime = transitionAnimCurve.keys[0].time;
+            float animCurveEndTime = transitionAnimCurve.keys[keysLength - 1].time;
+            float animCurveDuration = animCurveEndTime - animCurveStartTime;
+
+            OnAnimateElementUpdate(transitionValue);
+
+            yield return new WaitForEndOfFrame();
 
             while (timeTranscurred < duration)
             {
-                transitionValue = Mathf.Clamp01(transitionAnimCurve.Evaluate(timeTranscurred / duration));
-                OnAnimateElementUpdate(transitionValue);
                 timeTranscurred += Time.deltaTime;
+                float animProgress = timeTranscurred / duration;
+                transitionValue = transitionAnimCurve.Evaluate(animCurveStartTime + (animCurveDuration * animProgress));
+                OnAnimateElementUpdate(transitionValue);
                 yield return new WaitForEndOfFrame();
             }
 
-            int keysLength = transitionAnimCurve.keys.Length;
-            transitionValue = Mathf.Clamp01(transitionAnimCurve.keys[keysLength - 1].value);
+            transitionValue = transitionAnimCurve.keys[keysLength - 1].value;
             OnAnimateElementUpdate(transitionValue);
             onAnimationFinished?.Invoke();
         }
