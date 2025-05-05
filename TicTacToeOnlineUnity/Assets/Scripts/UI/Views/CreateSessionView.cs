@@ -56,9 +56,9 @@ namespace TicTacToeOnline.Ui.Views
         private void OnMatchCreationSuccess(Lobby lobby)
         {
             viewManager.RemoveView<LoadingView>();
+            viewManager.RemoveView<CreateSessionView>();
             SessionView sessionView = viewManager.DisplayView<SessionView>();
             sessionView.UpdateSessionInformation(lobby);
-            viewManager.RemoveView<CreateSessionView>();
         }
 
         private void OnMatchCreationFailure()
@@ -74,8 +74,8 @@ namespace TicTacToeOnline.Ui.Views
 
         private void OnGoBackActionPerformed()
         {
-            viewManager.DisplayView<MainMenuView>();
             viewManager.RemoveView<CreateSessionView>();
+            viewManager.DisplayView<MainMenuView>();
         }
     }
 }

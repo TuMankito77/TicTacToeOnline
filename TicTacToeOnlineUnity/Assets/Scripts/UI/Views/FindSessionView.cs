@@ -107,9 +107,9 @@ namespace TicTacToeOnline.Ui.Views
         private void OnConnectToLobbySuccess(Lobby lobby)
         {
             viewManager.RemoveView<LoadingView>();
+            viewManager.RemoveView<FindSessionView>();
             SessionView sessionView = viewManager.DisplayView<SessionView>();
             sessionView.UpdateSessionInformation(lobby);
-            viewManager.RemoveView<FindSessionView>();
         }
 
         private void OnConnectToLobbyFailure()
@@ -134,8 +134,8 @@ namespace TicTacToeOnline.Ui.Views
 
         private void OnGoBackActionPerformed()
         {
-            viewManager.DisplayView<MainMenuView>();
             viewManager.RemoveView<FindSessionView>();
+            viewManager.DisplayView<MainMenuView>();
         }
     }
 }

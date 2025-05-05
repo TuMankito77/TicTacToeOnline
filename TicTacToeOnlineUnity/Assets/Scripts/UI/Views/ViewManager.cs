@@ -11,6 +11,8 @@ namespace TicTacToeOnline.Ui.Views
         private List<BaseView> viewPrefabs = new List<BaseView>(0);
 
         private List<BaseView> viewsDisplayed = new List<BaseView>(0);
+        private Queue<Action> queuedAnimations = new Queue<Action>();
+        private bool isPlayingAnimation = false;
 
         public T DisplayView<T>() where T : BaseView
         {
@@ -26,6 +28,33 @@ namespace TicTacToeOnline.Ui.Views
             viewsDisplayed.Add(viewInstance);
             viewInstance.Initialize(this);
             viewInstance.ForceRebuildLayout();
+            viewInstance.onEnterAnimationFinished += OnTransitionInFinished;
+
+            void OnTransitionInFinished()
+            {
+                viewInstance.onEnterAnimationFinished -= OnTransitionInFinished;
+                isPlayingAnimation = false;
+
+                if (queuedAnimations.Count > 0)
+                {
+                    queuedAnimations.Dequeue()?.Invoke();
+                }
+            }
+
+            if(isPlayingAnimation)
+            {
+                queuedAnimations.Enqueue(() =>
+                {
+                    isPlayingAnimation = true;
+                    viewInstance.TransitionIn();
+                });
+            }
+            else
+            {
+                isPlayingAnimation = true;
+                viewInstance.TransitionIn();
+            }
+
             return viewInstance as T;
         }
 
@@ -39,7 +68,34 @@ namespace TicTacToeOnline.Ui.Views
             }
 
             viewsDisplayed.Remove(viewInstance);
-            Destroy(viewInstance.gameObject);
+
+            void OnTransitionOutFinished()
+            {
+                viewInstance.onExitAnimationFinished -= OnTransitionOutFinished;
+                isPlayingAnimation = false;
+                Destroy(viewInstance.gameObject);
+
+                if(queuedAnimations.Count > 0)
+                {
+                    queuedAnimations.Dequeue()?.Invoke();
+                }
+            }
+
+            viewInstance.onExitAnimationFinished += OnTransitionOutFinished;
+
+            if(isPlayingAnimation)
+            {
+                queuedAnimations.Enqueue(() =>
+                {
+                    isPlayingAnimation = true;
+                    viewInstance.TransitionOut();
+                });
+            }
+            else
+            {
+                isPlayingAnimation = true;
+                viewInstance.TransitionOut();
+            }
         }
     }
 }

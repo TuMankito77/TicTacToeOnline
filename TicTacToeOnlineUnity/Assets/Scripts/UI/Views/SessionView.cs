@@ -127,6 +127,8 @@ namespace TicTacToeOnline.Ui.Views
             {
                 messageView.onCloseButtonOkPressed -= OnClosebuttonOkPressed;
                 
+                viewManager.RemoveView<SessionView>();
+                
                 if (LobbyManager.Instance.IsLobbyHost)
                 {
                     LobbyManager.Instance.DestroyLobby(LobbyManager.Instance.Lobby.Id);
@@ -138,8 +140,6 @@ namespace TicTacToeOnline.Ui.Views
                     LobbyManager.Instance.DisconnectFromLobby(LobbyManager.Instance.Lobby.Id, OnlineServicesManager.Instance.GetPlayerId());
                     viewManager.DisplayView<FindSessionView>();
                 }
-
-                viewManager.RemoveView<SessionView>();
             }
 
             messageView.onCloseButtonOkPressed += OnClosebuttonOkPressed;
@@ -153,8 +153,8 @@ namespace TicTacToeOnline.Ui.Views
             void OnCloseButtonPressed()
             {
                 messageView.onCloseButtonOkPressed -= OnCloseButtonPressed;
-                viewManager.DisplayView<FindSessionView>();
                 viewManager.RemoveView<SessionView>();
+                viewManager.DisplayView<FindSessionView>();
             }
 
             messageView.onCloseButtonOkPressed += OnCloseButtonPressed;

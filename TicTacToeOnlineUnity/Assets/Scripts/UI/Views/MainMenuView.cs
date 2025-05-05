@@ -41,8 +41,8 @@ namespace TicTacToeOnline.Ui.Views
                 return;
             }
 
-            viewManager.DisplayView<CreateSessionView>();
             viewManager.RemoveView<MainMenuView>();
+            viewManager.DisplayView<CreateSessionView>();
         }
 
         private void OnFindSessionButtonPressed()
@@ -52,8 +52,8 @@ namespace TicTacToeOnline.Ui.Views
                 return;
             }
 
-            viewManager.DisplayView<FindSessionView>();
             viewManager.RemoveView<MainMenuView>();
+            viewManager.DisplayView<FindSessionView>();
         }
 
         private bool IsPlayerNameValid()

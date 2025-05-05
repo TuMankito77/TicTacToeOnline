@@ -10,11 +10,17 @@ namespace TicTacToeOnline.Ui.Animations
         [SerializeField]
         private Vector3 targetScale = Vector3.one;
 
+        [SerializeField]
+        private bool playAnimOnStart = false;
+
         #region Unity Methods
 
         private void Start()
         {
-            PlayAnimation();
+            if(playAnimOnStart)
+            {
+                PlayAnimation();
+            }
         }
 
         #endregion

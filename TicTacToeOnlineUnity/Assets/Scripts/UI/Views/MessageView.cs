@@ -49,14 +49,14 @@ namespace TicTacToeOnline.Ui.Views
 
         private void OnCloseMessageButtonOkPressed()
         {
-            onCloseButtonOkPressed?.Invoke();
             viewManager.RemoveView<MessageView>();
+            onCloseButtonOkPressed?.Invoke();
         }
 
         private void OnCloseMessageButtonCancelPressed()
         {
-            onCloseButtonCancelPressed?.Invoke();
             viewManager.RemoveView<MessageView>();
+            onCloseButtonCancelPressed?.Invoke();
         }
     }
 }
