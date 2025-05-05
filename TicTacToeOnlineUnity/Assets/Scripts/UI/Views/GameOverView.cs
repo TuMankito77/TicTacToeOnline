@@ -26,34 +26,21 @@ namespace TicTacToeOnline.Ui.Views
 
         #region Unity Methods
 
-        private void Start()
+        private void Awake()
         {
-            Hide();
-            GameManager.Instance.OnMatchFinished += OnMatchFinished;
-            GameManager.Instance.OnGameRestarted += OnGameRestarted;
             rematchButton.onClick.AddListener(OnRematchButtonPressed);
         }
 
         #endregion
 
-        private void Show()
+        public void UpdateWinnerInformation(PlayerType winner)
         {
-            gameObject.SetActive(true);
-        }
-
-        private void Hide()
-        {
-            gameObject.SetActive(false);
-        }
-
-        private void OnMatchFinished(object sender, GameManager.OnMatchFinishedEventArgs e)
-        {
-            if(e.Winner == PlayerType.None)
+            if (winner == PlayerType.None)
             {
-                resultsText.text =  "It's a tie!";
+                resultsText.text = "It's a tie!";
                 resultsText.color = tieColor;
             }
-            else if(e.Winner == GameManager.Instance.LocalPlayerType)
+            else if (winner == GameManager.Instance.LocalPlayerType)
             {
                 resultsText.text = "YOU WON!";
             }
@@ -81,13 +68,6 @@ namespace TicTacToeOnline.Ui.Views
                         break;
                     }
             }
-
-            Show();
-        }
-
-        private void OnGameRestarted(object sender, System.EventArgs e)
-        {
-            Hide();
         }
 
         private void OnRematchButtonPressed()

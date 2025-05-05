@@ -317,7 +317,6 @@ namespace TicTacToeOnline.Gameplay
                             OnMatchStartSucess?.Invoke();
                             viewManager.DisplayView<GridView>();
                             viewManager.DisplayView<Hud>();
-                            viewManager.DisplayView<GameOverView>();
                         }, 
                         () => { OnMatchStartFailure?.Invoke(); }
                     );
@@ -329,6 +328,9 @@ namespace TicTacToeOnline.Gameplay
         [Rpc(SendTo.ClientsAndHost)]
         private void SendMatchFinishedInformationRpc(Vector2 middleLineCanvasPosition, LineOrientation lineOrientation, PlayerType winner)
         {
+            GameOverView gameOverView = viewManager.DisplayView<GameOverView>();
+            gameOverView.UpdateWinnerInformation(winner);
+            
             OnMatchFinished?.Invoke(this, new OnMatchFinishedEventArgs
                 (
                     middleLineCanvasPosition,
@@ -340,6 +342,7 @@ namespace TicTacToeOnline.Gameplay
         [Rpc(SendTo.ClientsAndHost)]
         private void TriggerRestartGameRpc()
         {
+            viewManager.RemoveView<GameOverView>();
             OnGameRestarted?.Invoke(this, EventArgs.Empty);
         }
 
@@ -469,7 +472,6 @@ namespace TicTacToeOnline.Gameplay
                                         viewManager.RemoveView<SessionView>();
                                         viewManager.DisplayView<GridView>();
                                         viewManager.DisplayView<Hud>();
-                                        viewManager.DisplayView<GameOverView>();
                                     },
                                     () => 
                                     { 
