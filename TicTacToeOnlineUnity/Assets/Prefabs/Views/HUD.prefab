@@ -10,6 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6495094138445947038}
   - component: {fileID: 4891233680441183471}
+  - component: {fileID: 3406993187131957977}
+  - component: {fileID: 8218721633478182274}
+  - component: {fileID: 35131843674177797}
   m_Layer: 5
   m_Name: HUD
   m_TagString: Untagged
@@ -50,11 +53,106 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3280c4572069074991f65d83bb2da37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enterAnimatedElement: {fileID: 8218721633478182274}
+  exitAnimatimatedElement: {fileID: 35131843674177797}
+  canvasGroup: {fileID: 3406993187131957977}
   circleImage: {fileID: 5725822026462737121}
   crossImage: {fileID: 4339983328893228440}
   playerTurnText: {fileID: 6020692068355189719}
   crossesScoreText: {fileID: 3052912640094792808}
   circlesScoreText: {fileID: 2706866507709194919}
+--- !u!225 &3406993187131957977
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2708850260624355975}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &8218721633478182274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2708850260624355975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac71e7ffff4612343bc31af05f042b25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 0.5
+  transitionAnimCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  startScale: {x: 0, y: 0, z: 0}
+  targetScale: {x: 1, y: 1, z: 1}
+  playAnimOnStart: 0
+--- !u!114 &35131843674177797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2708850260624355975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac71e7ffff4612343bc31af05f042b25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 0.5
+  transitionAnimCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  startScale: {x: 1, y: 1, z: 1}
+  targetScale: {x: 0, y: 0, z: 0}
+  playAnimOnStart: 0
 --- !u!1 &2884232987947293472
 GameObject:
   m_ObjectHideFlags: 0
@@ -88,10 +186,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2934650710713016365}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 387.05, y: -35}
-  m_SizeDelta: {x: 60, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8956536980341784732
 CanvasRenderer:
@@ -328,10 +426,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2934650710713016365}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 230, y: -35}
-  m_SizeDelta: {x: 60, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5168494409098549254
 CanvasRenderer:

@@ -237,11 +237,38 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 5008964311505198469}
   m_SourcePrefab: {fileID: 100100000, guid: 24275b72528f6da4cb91b3957cdd0608, type: 3}
+--- !u!225 &2283972198061944721 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 1269072072919080899, guid: 24275b72528f6da4cb91b3957cdd0608, type: 3}
+  m_PrefabInstance: {fileID: 1022012341898473554}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2527298244927903864 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3259531436797536298, guid: 24275b72528f6da4cb91b3957cdd0608, type: 3}
+  m_PrefabInstance: {fileID: 1022012341898473554}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac71e7ffff4612343bc31af05f042b25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &4666073333089355413 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5687995984170890951, guid: 24275b72528f6da4cb91b3957cdd0608, type: 3}
   m_PrefabInstance: {fileID: 1022012341898473554}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6551689700913082903 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6107635211370889797, guid: 24275b72528f6da4cb91b3957cdd0608, type: 3}
+  m_PrefabInstance: {fileID: 1022012341898473554}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac71e7ffff4612343bc31af05f042b25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8720998413822457435 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8586639452763162121, guid: 24275b72528f6da4cb91b3957cdd0608, type: 3}
@@ -259,6 +286,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 004cbbf4c0cb91148a8a53646aa43a1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enterAnimatedElement: {fileID: 2527298244927903864}
+  exitAnimatimatedElement: {fileID: 6551689700913082903}
+  canvasGroup: {fileID: 2283972198061944721}
   createSessionButton: {fileID: 5376849082982336580}
   findSessionButton: {fileID: 2948277863992042213}
   playerNameText: {fileID: 7492721450769223674}

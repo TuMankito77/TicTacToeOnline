@@ -245,6 +245,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8229319868402218004}
   - component: {fileID: 6691326291764850316}
+  - component: {fileID: 7271791653133945186}
+  - component: {fileID: 7287646719125593975}
+  - component: {fileID: 7377053436490900148}
   m_Layer: 5
   m_Name: GridView
   m_TagString: Untagged
@@ -285,6 +288,101 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3064a3fdef8c18847b2a52c4a3137545, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enterAnimatedElement: {fileID: 7287646719125593975}
+  exitAnimatimatedElement: {fileID: 7377053436490900148}
+  canvasGroup: {fileID: 7271791653133945186}
+--- !u!225 &7271791653133945186
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3015113944404406440}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &7287646719125593975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3015113944404406440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac71e7ffff4612343bc31af05f042b25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 0.5
+  transitionAnimCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  startScale: {x: 0, y: 0, z: 0}
+  targetScale: {x: 1, y: 1, z: 1}
+  playAnimOnStart: 0
+--- !u!114 &7377053436490900148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3015113944404406440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac71e7ffff4612343bc31af05f042b25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 0.5
+  transitionAnimCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  startScale: {x: 1, y: 1, z: 1}
+  targetScale: {x: 0, y: 0, z: 0}
+  playAnimOnStart: 0
 --- !u!1 &3879294224143159168
 GameObject:
   m_ObjectHideFlags: 0

@@ -286,6 +286,22 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: -6476335656011247949}
   m_SourcePrefab: {fileID: 100100000, guid: 24275b72528f6da4cb91b3957cdd0608, type: 3}
+--- !u!114 &1132255417053010265 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3259531436797536298, guid: 24275b72528f6da4cb91b3957cdd0608, type: 3}
+  m_PrefabInstance: {fileID: 2489007215193485683}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac71e7ffff4612343bc31af05f042b25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!225 &3681161134859628208 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 1269072072919080899, guid: 24275b72528f6da4cb91b3957cdd0608, type: 3}
+  m_PrefabInstance: {fileID: 2489007215193485683}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6170887830079829882 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8586639452763162121, guid: 24275b72528f6da4cb91b3957cdd0608, type: 3}
@@ -303,8 +319,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3fa3082a1d2a0b4da4eacbd46c6bfc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enterAnimatedElement: {fileID: 1132255417053010265}
+  exitAnimatimatedElement: {fileID: 8523087594564875062}
+  canvasGroup: {fileID: 3681161134859628208}
 --- !u!224 &7810764482449721268 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5687995984170890951, guid: 24275b72528f6da4cb91b3957cdd0608, type: 3}
   m_PrefabInstance: {fileID: 2489007215193485683}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8523087594564875062 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6107635211370889797, guid: 24275b72528f6da4cb91b3957cdd0608, type: 3}
+  m_PrefabInstance: {fileID: 2489007215193485683}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac71e7ffff4612343bc31af05f042b25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

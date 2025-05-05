@@ -775,11 +775,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8ed40dbbf1a377418b97df44a3a9c95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enterAnimatedElement: {fileID: 6642011585485224697}
+  exitAnimatimatedElement: {fileID: 2725708118373109910}
+  canvasGroup: {fileID: 6957395779499379984}
   messageText: {fileID: 371611371489053514}
   closeMessageButtonOk: {fileID: 7063068249112117514}
   closeMessageButtonCancel: {fileID: 6220458487532093840}
+--- !u!114 &2725708118373109910 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6107635211370889797, guid: 24275b72528f6da4cb91b3957cdd0608, type: 3}
+  m_PrefabInstance: {fileID: 8147298470452597459}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac71e7ffff4612343bc31af05f042b25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &4611359450357539860 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5687995984170890951, guid: 24275b72528f6da4cb91b3957cdd0608, type: 3}
+  m_PrefabInstance: {fileID: 8147298470452597459}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6642011585485224697 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3259531436797536298, guid: 24275b72528f6da4cb91b3957cdd0608, type: 3}
+  m_PrefabInstance: {fileID: 8147298470452597459}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac71e7ffff4612343bc31af05f042b25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!225 &6957395779499379984 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 1269072072919080899, guid: 24275b72528f6da4cb91b3957cdd0608, type: 3}
   m_PrefabInstance: {fileID: 8147298470452597459}
   m_PrefabAsset: {fileID: 0}

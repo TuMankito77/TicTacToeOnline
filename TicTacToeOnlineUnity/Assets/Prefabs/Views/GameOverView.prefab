@@ -10,6 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 122283621250872225}
   - component: {fileID: 710614175150137963}
+  - component: {fileID: 4222212482046097321}
+  - component: {fileID: 2515076491319565662}
+  - component: {fileID: 2888628126117655533}
   m_Layer: 5
   m_Name: GameOverView
   m_TagString: Untagged
@@ -51,11 +54,106 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fe8df1f49464e84eb0d2e5aab5aacf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enterAnimatedElement: {fileID: 2515076491319565662}
+  exitAnimatimatedElement: {fileID: 2888628126117655533}
+  canvasGroup: {fileID: 4222212482046097321}
   resultsText: {fileID: 5305833797854345691}
   circlesColor: {r: 0.92941177, g: 0.9490196, b: 0.95686275, a: 1}
   crossesColor: {r: 0.9372549, g: 0.13725491, b: 0.23529412, a: 1}
   tieColor: {r: 0.5529412, g: 0.6, b: 0.68235296, a: 1}
   rematchButton: {fileID: 1298488309310076915}
+--- !u!225 &4222212482046097321
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055187236591999306}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &2515076491319565662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055187236591999306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac71e7ffff4612343bc31af05f042b25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 0.5
+  transitionAnimCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  startScale: {x: 0, y: 0, z: 0}
+  targetScale: {x: 1, y: 1, z: 1}
+  playAnimOnStart: 0
+--- !u!114 &2888628126117655533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055187236591999306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac71e7ffff4612343bc31af05f042b25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 0.5
+  transitionAnimCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  startScale: {x: 1, y: 1, z: 1}
+  targetScale: {x: 0, y: 0, z: 0}
+  playAnimOnStart: 0
 --- !u!1 &4781688949974942357
 GameObject:
   m_ObjectHideFlags: 0
