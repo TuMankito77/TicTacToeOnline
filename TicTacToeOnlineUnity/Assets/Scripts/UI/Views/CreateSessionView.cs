@@ -8,7 +8,6 @@ namespace TicTacToeOnline.Ui.Views
     
     using TicTacToeOnline.Gameplay;
     using TicTacToeOnline.Networking;
-    using TicTacToeOnline.Input;
 
     public class CreateSessionView : BaseView
     {
@@ -23,16 +22,20 @@ namespace TicTacToeOnline.Ui.Views
         private void OnEnable()
         {
             createButton.onButtonPressed += OnCreateButtonPressed;
-            InputManager.Instance.onGoBackActionPerformed += OnGoBackActionPerformed;
         }
 
         private void OnDisable()
         {
             createButton.onButtonPressed -= OnCreateButtonPressed;
-            InputManager.Instance.onGoBackActionPerformed -= OnGoBackActionPerformed;
         }
 
         #endregion
+
+        protected override void OnGoBackActionPerformed()
+        {
+            viewManager.RemoveView<CreateSessionView>();
+            viewManager.DisplayView<MainMenuView>();
+        }
 
         private void OnCreateButtonPressed()
         {
@@ -70,12 +73,6 @@ namespace TicTacToeOnline.Ui.Views
             {
                 messageView.SetMessageText("Failed to create session, please try again.");
             }
-        }
-
-        private void OnGoBackActionPerformed()
-        {
-            viewManager.RemoveView<CreateSessionView>();
-            viewManager.DisplayView<MainMenuView>();
         }
     }
 }

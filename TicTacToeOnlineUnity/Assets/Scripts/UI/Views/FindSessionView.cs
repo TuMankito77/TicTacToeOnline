@@ -7,7 +7,6 @@ namespace TicTacToeOnline.Ui.Views
     
     using TicTacToeOnline.Networking;
     using TicTacToeOnline.Gameplay;
-    using TicTacToeOnline.Input;
 
     public class FindSessionView : BaseView
     {
@@ -32,13 +31,11 @@ namespace TicTacToeOnline.Ui.Views
         private void OnEnable()
         {
             refreshButton.onButtonPressed += OnRefreshButtonPressed;
-            InputManager.Instance.onGoBackActionPerformed += OnGoBackActionPerformed;
         }
 
         private void OnDisable()
         {
             refreshButton.onButtonPressed -= OnRefreshButtonPressed;
-            InputManager.Instance.onGoBackActionPerformed -= OnGoBackActionPerformed;
         }
 
         private void OnDestroy()
@@ -66,6 +63,12 @@ namespace TicTacToeOnline.Ui.Views
 
             sessionButtons.Clear();
             LobbyManager.Instance.GetAvailableLobbies(OnGetLobbiesSuccess, OnGetLobbiesFailure);
+        }
+
+        protected override void OnGoBackActionPerformed()
+        {
+            viewManager.RemoveView<FindSessionView>();
+            viewManager.DisplayView<MainMenuView>();
         }
 
         private void OnGetLobbiesSuccess(List<Lobby> lobbies)
@@ -130,12 +133,6 @@ namespace TicTacToeOnline.Ui.Views
         private void OnRefreshButtonPressed()
         {
             UpdateSessionsList();
-        }
-
-        private void OnGoBackActionPerformed()
-        {
-            viewManager.RemoveView<FindSessionView>();
-            viewManager.DisplayView<MainMenuView>();
         }
     }
 }

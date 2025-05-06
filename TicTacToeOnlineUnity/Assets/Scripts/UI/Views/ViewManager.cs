@@ -2,8 +2,10 @@ namespace TicTacToeOnline.Ui.Views
 {
     using System;
     using System.Collections.Generic;
-
+    
     using UnityEngine;
+    
+    using TicTacToeOnline.Input;
 
     public class ViewManager : MonoBehaviour
     {
@@ -25,6 +27,12 @@ namespace TicTacToeOnline.Ui.Views
             }
 
             BaseView viewInstance = Instantiate(viewPrefab, transform);
+
+            if(viewsDisplayed.Count > 0)
+            {
+                InputManager.Instance.onGoBackActionPerformed -= viewsDisplayed[viewsDisplayed.Count - 1].onGoBackActionPerformed;
+            }
+
             viewsDisplayed.Add(viewInstance);
             viewInstance.Initialize(this);
             viewInstance.ForceRebuildLayout();
@@ -33,11 +41,15 @@ namespace TicTacToeOnline.Ui.Views
             void OnTransitionInFinished()
             {
                 viewInstance.onEnterAnimationFinished -= OnTransitionInFinished;
-                isPlayingAnimation = false;
 
                 if (queuedAnimations.Count > 0)
                 {
                     queuedAnimations.Dequeue()?.Invoke();
+                }
+                else
+                {
+                    isPlayingAnimation = false;
+                    InputManager.Instance.onGoBackActionPerformed += viewsDisplayed[viewsDisplayed.Count - 1].onGoBackActionPerformed;
                 }
             }
 
@@ -68,16 +80,21 @@ namespace TicTacToeOnline.Ui.Views
             }
 
             viewsDisplayed.Remove(viewInstance);
+            InputManager.Instance.onGoBackActionPerformed -= viewInstance.onGoBackActionPerformed;
 
             void OnTransitionOutFinished()
             {
                 viewInstance.onExitAnimationFinished -= OnTransitionOutFinished;
-                isPlayingAnimation = false;
                 Destroy(viewInstance.gameObject);
 
                 if(queuedAnimations.Count > 0)
                 {
                     queuedAnimations.Dequeue()?.Invoke();
+                }
+                else
+                {
+                    isPlayingAnimation = false;
+                    InputManager.Instance.onGoBackActionPerformed += viewsDisplayed[viewsDisplayed.Count - 1].onGoBackActionPerformed;
                 }
             }
 

@@ -47,6 +47,12 @@ namespace TicTacToeOnline.Ui.Views
             ForceRebuildLayout();
         }
 
+        protected override void OnGoBackActionPerformed()
+        {
+            viewManager.RemoveView<MessageView>();
+            onCloseButtonCancelPressed?.Invoke();
+        }
+
         private void OnCloseMessageButtonOkPressed()
         {
             viewManager.RemoveView<MessageView>();

@@ -12,6 +12,7 @@ namespace TicTacToeOnline.Ui.Views
     {
         public Action onEnterAnimationFinished;
         public Action onExitAnimationFinished;
+        public Action onGoBackActionPerformed;
 
         [SerializeField]
         private BaseAnimatedElement enterAnimatedElement = null;
@@ -37,6 +38,7 @@ namespace TicTacToeOnline.Ui.Views
         {
             canvasGroup.alpha = 1;
             enterAnimatedElement.onAnimationFinished += OnEnterAnimationFinished;
+            onGoBackActionPerformed += OnGoBackActionPerformed;
             IsPlayingAnimation = true;
             enterAnimatedElement.PlayAnimation();
         }
@@ -45,6 +47,7 @@ namespace TicTacToeOnline.Ui.Views
         {
             canvasGroup.interactable = false;
             exitAnimatimatedElement.onAnimationFinished += OnExitAnimationFinshed;
+            onGoBackActionPerformed -= OnGoBackActionPerformed;
             IsPlayingAnimation = true;
             exitAnimatimatedElement.PlayAnimation();
         }
@@ -76,6 +79,11 @@ namespace TicTacToeOnline.Ui.Views
             {
                 LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
             }
+        }
+
+        protected virtual void OnGoBackActionPerformed()
+        {
+
         }
 
         private void OnEnterAnimationFinished()

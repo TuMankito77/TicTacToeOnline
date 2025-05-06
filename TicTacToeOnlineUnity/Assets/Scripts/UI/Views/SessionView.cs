@@ -8,7 +8,6 @@ namespace TicTacToeOnline.Ui.Views
    
     using TicTacToeOnline.Networking;
     using TicTacToeOnline.Gameplay;
-    using TicTacToeOnline.Input;
 
     public class SessionView : BaseView
     {
@@ -33,14 +32,12 @@ namespace TicTacToeOnline.Ui.Views
         {
             startMatchButton.onButtonPressed += OnStartMatchButtonPressed;
             LobbyManager.Instance.onLobbyInformationUpdated += OnLobbyInformationUpdated;
-            InputManager.Instance.onGoBackActionPerformed += OnGoBackActionPerformed;
         }
 
         private void OnDisable()
         {
             startMatchButton.onButtonPressed -= OnStartMatchButtonPressed;
             LobbyManager.Instance.onLobbyInformationUpdated -= OnLobbyInformationUpdated;
-            InputManager.Instance.onGoBackActionPerformed -= OnGoBackActionPerformed;
         }
 
         #endregion
@@ -70,6 +67,34 @@ namespace TicTacToeOnline.Ui.Views
                 sessionStatusText.text = $"Waiting for host to start the game.";
                 LobbyManager.Instance.onKickedFromLobby += OnKickedFromLobby;
             }
+        }
+
+        protected override void OnGoBackActionPerformed()
+        {
+            MessageView messageView = viewManager.DisplayView<MessageView>();
+            messageView.SetMessageText("Are you sure you want to exit the match?");
+            messageView.ActivateCloseMessageButtonCancel();
+
+            void OnClosebuttonOkPressed()
+            {
+                messageView.onCloseButtonOkPressed -= OnClosebuttonOkPressed;
+
+                viewManager.RemoveView<SessionView>();
+
+                if (LobbyManager.Instance.IsLobbyHost)
+                {
+                    LobbyManager.Instance.DestroyLobby(LobbyManager.Instance.Lobby.Id);
+                    viewManager.DisplayView<CreateSessionView>();
+                }
+                else
+                {
+                    LobbyManager.Instance.onKickedFromLobby -= OnKickedFromLobby;
+                    LobbyManager.Instance.DisconnectFromLobby(LobbyManager.Instance.Lobby.Id, OnlineServicesManager.Instance.GetPlayerId());
+                    viewManager.DisplayView<FindSessionView>();
+                }
+            }
+
+            messageView.onCloseButtonOkPressed += OnClosebuttonOkPressed;
         }
 
         private void OnStartMatchButtonPressed()
@@ -115,34 +140,6 @@ namespace TicTacToeOnline.Ui.Views
                         break;
                     }
             }
-        }
-
-        private void OnGoBackActionPerformed()
-        {
-            MessageView messageView = viewManager.DisplayView<MessageView>();
-            messageView.SetMessageText("Are you sure you want to exit the match?");
-            messageView.ActivateCloseMessageButtonCancel();
-
-            void OnClosebuttonOkPressed()
-            {
-                messageView.onCloseButtonOkPressed -= OnClosebuttonOkPressed;
-                
-                viewManager.RemoveView<SessionView>();
-                
-                if (LobbyManager.Instance.IsLobbyHost)
-                {
-                    LobbyManager.Instance.DestroyLobby(LobbyManager.Instance.Lobby.Id);
-                    viewManager.DisplayView<CreateSessionView>();
-                }
-                else
-                {
-                    LobbyManager.Instance.onKickedFromLobby -= OnKickedFromLobby;
-                    LobbyManager.Instance.DisconnectFromLobby(LobbyManager.Instance.Lobby.Id, OnlineServicesManager.Instance.GetPlayerId());
-                    viewManager.DisplayView<FindSessionView>();
-                }
-            }
-
-            messageView.onCloseButtonOkPressed += OnClosebuttonOkPressed;
         }
 
         private void OnKickedFromLobby()
