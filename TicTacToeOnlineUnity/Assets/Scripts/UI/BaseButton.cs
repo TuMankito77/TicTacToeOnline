@@ -6,6 +6,8 @@ namespace TicTacToeOnline.Ui.Views
     using UnityEngine.UI;
     
     using TMPro;
+    using TicTacToeOnline.Ui.Animations;
+    using UnityEngine.EventSystems;
 
     public class BaseButton : MonoBehaviour
     {
@@ -14,6 +16,12 @@ namespace TicTacToeOnline.Ui.Views
 
         [SerializeField]
         private TextMeshProUGUI buttonText = null;
+
+        [SerializeField]
+        private BaseAnimatedElement animatedElement = null;
+
+        [SerializeField]
+        private bool triggerButtonActionBeforeAnimation = true;
 
         public Action onButtonPressed = null;
 
@@ -37,6 +45,23 @@ namespace TicTacToeOnline.Ui.Views
         }
         
         private void OnButtonPressed()
+        {
+            if(EventSystem.current.currentSelectedGameObject == gameObject)
+            {
+                animatedElement.PlayAnimation();
+
+                if(triggerButtonActionBeforeAnimation)
+                {
+                    onButtonPressed?.Invoke();
+                }
+                else
+                {
+                    animatedElement.onAnimationFinished += OnButtonAnimationFinished;
+                }
+            }
+        }
+
+        private void OnButtonAnimationFinished()
         {
             onButtonPressed?.Invoke();
         }
