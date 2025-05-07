@@ -835,7 +835,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac71e7ffff4612343bc31af05f042b25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duration: 0.5
+  duration: 0.3
   transitionAnimCurve:
     serializedVersion: 2
     m_Curve:
@@ -862,6 +862,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   startScale: {x: 0, y: 0, z: 0}
   targetScale: {x: 1, y: 1, z: 1}
+  playAnimOnStart: 0
 --- !u!114 &6107635211370889797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -881,12 +882,21 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 2
-      outSlope: 2
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
       outWeight: 0
+    - serializedVersion: 3
+      time: 0.4
+      value: 0
+      inSlope: -0
+      outSlope: 1.6329932
+      tangentMode: 5
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
       value: 1
@@ -901,6 +911,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   startScale: {x: 1, y: 1, z: 1}
   targetScale: {x: 0, y: 0, z: 0}
+  playAnimOnStart: 0
 --- !u!1001 &3686882962105799249
 PrefabInstance:
   m_ObjectHideFlags: 0
