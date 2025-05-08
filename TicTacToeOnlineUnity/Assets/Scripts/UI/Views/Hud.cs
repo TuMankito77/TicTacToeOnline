@@ -27,6 +27,9 @@ namespace TicTacToeOnline.Ui.Views
         [SerializeField]
         private TextMeshProUGUI circlesScoreText = null;
 
+        [SerializeField]
+        private BaseButton quitMachButton = null;
+
         #region Unity Methods
 
         private void Awake()
@@ -38,10 +41,16 @@ namespace TicTacToeOnline.Ui.Views
             circlesScoreText.text = $"{0}";
         }
 
-        private void Start()
+        private void OnEnable()
         {
             GameManager.Instance.OnPlayerTurnUpdated += OnPlayerTurnUpdated;
             GameManager.Instance.OnScoresUpdated += OnScoresUpdated;
+            quitMachButton.onButtonPressed += OnQuitMatchButtonPressed;
+        }
+
+        private void OnDisable()
+        {
+            
         }
 
         #endregion
@@ -94,6 +103,21 @@ namespace TicTacToeOnline.Ui.Views
             }
 
             ForceRebuildLayout();
+        }
+
+        private void OnQuitMatchButtonPressed()
+        {
+            MessageView messageView = viewManager.DisplayView<MessageView>();
+            messageView.ActivateCloseMessageButtonCancel();
+            messageView.SetMessageText($"Are you sure you want to quit the match?");
+
+            void OnCloseButtonOkPressed()
+            {
+                messageView.onCloseButtonOkPressed -= OnCloseButtonOkPressed;
+                //Call an fuction on both client and server to leave the lobby and the relay.
+            }
+
+            messageView.onCloseButtonOkPressed += OnCloseButtonOkPressed;
         }
     }
 }
