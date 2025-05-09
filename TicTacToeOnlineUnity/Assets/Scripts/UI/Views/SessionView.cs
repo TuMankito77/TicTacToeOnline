@@ -38,6 +38,11 @@ namespace TicTacToeOnline.Ui.Views
         {
             startMatchButton.onButtonPressed -= OnStartMatchButtonPressed;
             LobbyManager.Instance.onLobbyInformationUpdated -= OnLobbyInformationUpdated;
+
+            if(!LobbyManager.Instance.IsLobbyHost)
+            {
+                LobbyManager.Instance.onKickedFromLobby -= OnKickedFromLobby;
+            }
         }
 
         #endregion

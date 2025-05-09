@@ -65,6 +65,11 @@ namespace TicTacToeOnline.Networking
                 OnFailure?.Invoke();
             }
         }
+
+        public void DisconnectRelay()
+        {
+            NetworkManager.Singleton.DisconnectClient(NetworkManager.Singleton.LocalClientId);
+        }
     }
 }
 

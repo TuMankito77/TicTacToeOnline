@@ -16,8 +16,8 @@ namespace TicTacToeOnline.Networking
         public const string PLAYER_NAME_KEY = "PlayerName";
         public const string RELAY_CODE_KEY = "RelayCode";
         
-        public Action<Lobby, LobbyUpdateType> onLobbyInformationUpdated = null;
-        public Action onKickedFromLobby = null;
+        public event Action<Lobby, LobbyUpdateType> onLobbyInformationUpdated = null;
+        public event Action onKickedFromLobby = null;
 
         private Coroutine keepLobbyAliveCoroutine = null;
         private LobbyEventCallbacks lobbyEventCallbacks = null;

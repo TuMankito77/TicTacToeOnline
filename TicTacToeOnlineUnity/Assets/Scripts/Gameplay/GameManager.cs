@@ -266,12 +266,6 @@ namespace TicTacToeOnline.Gameplay
         }
 
         [Rpc(SendTo.ClientsAndHost)]
-        private void SendOnClickedOnGridPositionEventRpc(Vector2 canvasPosition, PlayerType playerType)
-        {
-            OnClickedOnGridPosition?.Invoke(this, new OnClickedOnGridPositionEventArgs(canvasPosition, playerType));
-        }
-
-        [Rpc(SendTo.ClientsAndHost)]
         public void SendOnMarkPlacedRpc()
         {
             OnMarkPlaced?.Invoke(this, EventArgs.Empty);
@@ -325,6 +319,13 @@ namespace TicTacToeOnline.Gameplay
             );
         }
 
+        public void FinishMatch()
+        {
+            viewManager.RemoveView<Hud>();
+            viewManager.RemoveView<GridView>();
+            viewManager.DisplayView<MainMenuView>();
+        }
+
         [Rpc(SendTo.ClientsAndHost)]
         private void SendMatchFinishedInformationRpc(Vector2 middleLineCanvasPosition, LineOrientation lineOrientation, PlayerType winner)
         {
@@ -337,6 +338,12 @@ namespace TicTacToeOnline.Gameplay
                     lineOrientation,
                     winner
                 ));
+        }
+
+        [Rpc(SendTo.ClientsAndHost)]
+        private void SendOnClickedOnGridPositionEventRpc(Vector2 canvasPosition, PlayerType playerType)
+        {
+            OnClickedOnGridPosition?.Invoke(this, new OnClickedOnGridPositionEventArgs(canvasPosition, playerType));
         }
 
         [Rpc(SendTo.ClientsAndHost)]

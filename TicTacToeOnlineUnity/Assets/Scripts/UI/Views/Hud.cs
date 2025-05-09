@@ -5,6 +5,8 @@ namespace TicTacToeOnline.Ui.Views
     using TMPro;
 
     using TicTacToeOnline.Gameplay;
+    using TicTacToeOnline.Networking;
+    using Unity.Services.Lobbies.Models;
 
     public class Hud : BaseView
     {
@@ -46,11 +48,31 @@ namespace TicTacToeOnline.Ui.Views
             GameManager.Instance.OnPlayerTurnUpdated += OnPlayerTurnUpdated;
             GameManager.Instance.OnScoresUpdated += OnScoresUpdated;
             quitMachButton.onButtonPressed += OnQuitMatchButtonPressed;
+
+            if(LobbyManager.Instance.IsLobbyHost)
+            {
+                LobbyManager.Instance.onLobbyInformationUpdated += OnLobbyInformationUpdated;
+            }
+            else
+            {
+                LobbyManager.Instance.onKickedFromLobby += OnKickedFromLobby;
+            }
         }
 
         private void OnDisable()
         {
-            
+            GameManager.Instance.OnPlayerTurnUpdated -= OnPlayerTurnUpdated;
+            GameManager.Instance.OnScoresUpdated -= OnScoresUpdated;
+            quitMachButton.onButtonPressed -= OnQuitMatchButtonPressed;
+
+            if(LobbyManager.Instance.IsLobbyHost)
+            {
+                LobbyManager.Instance.onLobbyInformationUpdated -= OnLobbyInformationUpdated;
+            }
+            else
+            {
+                LobbyManager.Instance.onKickedFromLobby -= OnKickedFromLobby;                
+            }
         }
 
         #endregion
@@ -114,7 +136,53 @@ namespace TicTacToeOnline.Ui.Views
             void OnCloseButtonOkPressed()
             {
                 messageView.onCloseButtonOkPressed -= OnCloseButtonOkPressed;
-                //Call an fuction on both client and server to leave the lobby and the relay.
+
+                if (LobbyManager.Instance.IsLobbyHost)
+                {
+                    LobbyManager.Instance.DestroyLobby(LobbyManager.Instance.Lobby.Id);
+                    RelayManager.Instance.DisconnectRelay();
+                    GameManager.Instance.FinishMatch();
+                }
+                else
+                {
+                    LobbyManager.Instance.onKickedFromLobby -= OnKickedFromLobby;
+                    LobbyManager.Instance.DisconnectFromLobby(LobbyManager.Instance.Lobby.Id, OnlineServicesManager.Instance.GetPlayerId());
+                    GameManager.Instance.FinishMatch();
+                }
+            }
+
+            messageView.onCloseButtonOkPressed += OnCloseButtonOkPressed;
+        }
+
+        private void OnKickedFromLobby()
+        {
+            DisplayMatchEndedMessage();
+        }
+
+
+        private void OnLobbyInformationUpdated(Lobby lobby, LobbyUpdateType lobbyUpdateType)
+        {
+            switch(lobbyUpdateType)
+            {
+                case LobbyUpdateType.PlayerLeft:
+                    {
+                        RelayManager.Instance.DisconnectRelay();
+                        LobbyManager.Instance.DestroyLobby(LobbyManager.Instance.Lobby.Id);
+                        DisplayMatchEndedMessage();
+                        break;
+                    }
+            }
+        }
+
+        private void DisplayMatchEndedMessage()
+        {
+            MessageView messageView = viewManager.DisplayView<MessageView>();
+            messageView.SetMessageText($"Your opponent decided to finish the match.");
+
+            void OnCloseButtonOkPressed()
+            {
+                messageView.onCloseButtonOkPressed -= OnCloseButtonOkPressed;
+                GameManager.Instance.FinishMatch();
             }
 
             messageView.onCloseButtonOkPressed += OnCloseButtonOkPressed;
