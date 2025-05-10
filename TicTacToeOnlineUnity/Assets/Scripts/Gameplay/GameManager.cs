@@ -41,7 +41,6 @@ namespace TicTacToeOnline.Gameplay
             }
         }
         
-        //public event EventHandler OnGameStarted;
         public event EventHandler OnPlayerTurnUpdated;
         public event EventHandler OnGameRestarted;
         public event EventHandler OnScoresUpdated;
@@ -274,18 +273,7 @@ namespace TicTacToeOnline.Gameplay
         [Rpc(SendTo.Server)]
         public void SendRestartGameRpc()
         {
-            for (int i = 0; i < gridCellsInfo.GetLength(0); i++)
-            {
-                for (int j = 0; j < gridCellsInfo.GetLength(1); j++)
-                {
-                    gridCellsInfo[i, j] = new GridCellInfo()
-                    {
-                        canvasPosition = Vector2.zero,
-                        playerTypeOwner = PlayerType.None
-                    };
-                }
-            }
-
+            ResetGridCellInfo();
             playerTypeTurn.Value = PlayerType.Circle;
             TriggerRestartGameRpc();
         }
@@ -321,6 +309,8 @@ namespace TicTacToeOnline.Gameplay
 
         public void FinishMatch()
         {
+            ResetGridCellInfo();
+            NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
             viewManager.RemoveView<Hud>();
             viewManager.RemoveView<GridView>();
             viewManager.DisplayView<MainMenuView>();
@@ -351,6 +341,21 @@ namespace TicTacToeOnline.Gameplay
         {
             viewManager.RemoveView<GameOverView>();
             OnGameRestarted?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ResetGridCellInfo()
+        {
+            for (int i = 0; i < gridCellsInfo.GetLength(0); i++)
+            {
+                for (int j = 0; j < gridCellsInfo.GetLength(1); j++)
+                {
+                    gridCellsInfo[i, j] = new GridCellInfo()
+                    {
+                        canvasPosition = Vector2.zero,
+                        playerTypeOwner = PlayerType.None
+                    };
+                }
+            }
         }
 
         private void TestWinner()

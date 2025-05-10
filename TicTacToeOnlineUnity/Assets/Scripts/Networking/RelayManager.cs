@@ -68,7 +68,8 @@ namespace TicTacToeOnline.Networking
 
         public void DisconnectRelay()
         {
-            NetworkManager.Singleton.DisconnectClient(NetworkManager.Singleton.LocalClientId);
+            NetworkManager.Singleton.DisconnectClient(NetworkManager.Singleton.IsServer ? NetworkManager.ServerClientId : NetworkManager.Singleton.LocalClientId);
+            NetworkManager.Singleton.Shutdown();
         }
     }
 }

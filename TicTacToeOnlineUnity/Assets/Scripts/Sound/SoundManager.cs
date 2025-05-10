@@ -26,8 +26,14 @@ namespace TicTacToeOnline.Sound
             GameManager.Instance.OnMatchFinished += OnMatchFinished;
         }
 
+        private void OnDestroy()
+        {
+            GameManager.Instance.OnMarkPlaced -= OnMarkPlaced;
+            GameManager.Instance.OnMatchFinished -= OnMatchFinished;
+        }
+
         #endregion
-        
+
         private void OnMatchFinished(object sender, GameManager.OnMatchFinishedEventArgs e)
         {
             if(e.Winner == GameManager.Instance.LocalPlayerType)

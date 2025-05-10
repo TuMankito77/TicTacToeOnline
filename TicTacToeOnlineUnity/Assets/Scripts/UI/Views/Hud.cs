@@ -140,15 +140,15 @@ namespace TicTacToeOnline.Ui.Views
                 if (LobbyManager.Instance.IsLobbyHost)
                 {
                     LobbyManager.Instance.DestroyLobby(LobbyManager.Instance.Lobby.Id);
-                    RelayManager.Instance.DisconnectRelay();
-                    GameManager.Instance.FinishMatch();
                 }
                 else
                 {
                     LobbyManager.Instance.onKickedFromLobby -= OnKickedFromLobby;
                     LobbyManager.Instance.DisconnectFromLobby(LobbyManager.Instance.Lobby.Id, OnlineServicesManager.Instance.GetPlayerId());
-                    GameManager.Instance.FinishMatch();
                 }
+                    
+                GameManager.Instance.FinishMatch();
+                RelayManager.Instance.DisconnectRelay();
             }
 
             messageView.onCloseButtonOkPressed += OnCloseButtonOkPressed;
@@ -157,6 +157,7 @@ namespace TicTacToeOnline.Ui.Views
         private void OnKickedFromLobby()
         {
             DisplayMatchEndedMessage();
+            RelayManager.Instance.DisconnectRelay();
         }
 
 

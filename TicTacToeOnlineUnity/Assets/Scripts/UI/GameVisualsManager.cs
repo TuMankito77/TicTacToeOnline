@@ -33,6 +33,15 @@ namespace TicTacToeOnline.Ui
             GameManager.Instance.OnGameRestarted += OnGameRestarted;
         }
 
+        private void OnDestroy()
+        {
+            GameManager.Instance.OnClickedOnGridPosition -= OnClickedOnGridPosition;
+            GameManager.Instance.OnMatchFinished -= OnMatchFinished;
+            GameManager.Instance.OnGameRestarted -= OnGameRestarted;
+        }
+
+        #endregion
+
         private void OnGameRestarted(object sender, System.EventArgs e)
         {
             for(int i = 0; i < gridVisuals.Count; i++)
@@ -90,8 +99,6 @@ namespace TicTacToeOnline.Ui
             winLineRectTransform.rotation = Quaternion.Euler(new Vector3(0, 0, eulerZ));
             gridVisuals.Add(winLineInstance);
         }
-
-        #endregion
 
         private void OnClickedOnGridPosition(object sender, GameManager.OnClickedOnGridPositionEventArgs e)
         {
