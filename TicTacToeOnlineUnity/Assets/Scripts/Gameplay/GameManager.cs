@@ -164,6 +164,8 @@ namespace TicTacToeOnline.Gameplay
                     lineOrientation = LineOrientation.DiabonalB
                 }
             };
+
+            Application.targetFrameRate = 60;
         }
 
         private void Start()
