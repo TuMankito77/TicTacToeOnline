@@ -5,6 +5,7 @@ namespace TicTacToeOnline.Ui.Views
     using UnityEngine;
     
     using TMPro;
+    using TicTacToeOnline.Gameplay;
 
     public class MainMenuView : BaseView
     {
@@ -19,8 +20,6 @@ namespace TicTacToeOnline.Ui.Views
 
         [SerializeField]
         private TMP_InputField playerNameText = null;
-
-        public Action<string> onPlayerNameChanged = null;
 
         #region Unity Methods
 
@@ -83,7 +82,7 @@ namespace TicTacToeOnline.Ui.Views
             }
             else
             {
-                onPlayerNameChanged?.Invoke(playerNameText.text);
+                GameManager.Instance.PlayerName = playerNameText.text;
                 return true;
             }
         }

@@ -74,7 +74,7 @@ namespace TicTacToeOnline.Gameplay
 
         public PlayerType LocalPlayerType => localPlayerType;
         public PlayerType PlayerTypeTurn => playerTypeTurn.Value;
-        public string PlayerName { get; private set; }
+        public string PlayerName { get; set; }
 
         #region Unity Methods
 
@@ -442,8 +442,7 @@ namespace TicTacToeOnline.Gameplay
             viewManager.RemoveView<LoadingView>();
             OnlineServicesManager.Instance.OnAnonimousSignInSucess -= OnAnonimousSignInSuccess;
             OnlineServicesManager.Instance.OnAnonimousSignInFail -= OnAnonimousSignInFailure;
-            MainMenuView mainMenuView = viewManager.DisplayView<MainMenuView>();
-            mainMenuView.onPlayerNameChanged += OnPlayerNameChanged;
+            viewManager.DisplayView<MainMenuView>();
         }
 
         private void OnAnonimousSignInFailure()
@@ -460,12 +459,7 @@ namespace TicTacToeOnline.Gameplay
 
             messageView.onCloseButtonOkPressed += OnAnonimousSignInFailureMessageClosed;
         }
-
-        private void OnPlayerNameChanged(string playerName)
-        {
-            PlayerName = playerName;
-        }
-
+        
         private void OnLobbyInformationUpdated(Lobby lobby, LobbyUpdateType lobbyUpdateType)
         {
             switch(lobbyUpdateType)
