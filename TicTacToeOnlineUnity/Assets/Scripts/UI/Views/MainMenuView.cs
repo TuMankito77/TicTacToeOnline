@@ -1,7 +1,5 @@
 namespace TicTacToeOnline.Ui.Views
 {
-    using System;
-    
     using UnityEngine;
     
     using TMPro;
@@ -16,6 +14,9 @@ namespace TicTacToeOnline.Ui.Views
         private BaseButton findSessionButton = null;
 
         [SerializeField]
+        private BaseButton settingsButton = null;
+
+        [SerializeField]
         private BaseButton quitButton = null;
 
         [SerializeField]
@@ -27,6 +28,7 @@ namespace TicTacToeOnline.Ui.Views
         {
             createSessionButton.onButtonPressed += OnCreateSessionButtonPressed;
             findSessionButton.onButtonPressed += OnFindSessionButtonPressed;
+            settingsButton.onButtonPressed += OnSettingsButtonPressed;
             quitButton.onButtonPressed += OnQuitButtonPressed;
         }
 
@@ -34,6 +36,7 @@ namespace TicTacToeOnline.Ui.Views
         {
             createSessionButton.onButtonPressed -= OnCreateSessionButtonPressed;
             findSessionButton.onButtonPressed -= OnFindSessionButtonPressed;
+            settingsButton.onButtonPressed -= OnSettingsButtonPressed;
             quitButton.onButtonPressed -= OnQuitButtonPressed;
         }
 
@@ -105,6 +108,12 @@ namespace TicTacToeOnline.Ui.Views
             }
 
             messageView.onCloseButtonOkPressed += OnCloseButtonOkPressed;
+        }
+
+        private void OnSettingsButtonPressed()
+        {
+            viewManager.RemoveView<MainMenuView>();
+            viewManager.DisplayView<SettingsView>();
         }
     }
 }

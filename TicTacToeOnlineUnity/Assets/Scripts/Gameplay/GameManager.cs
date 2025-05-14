@@ -11,6 +11,9 @@ namespace TicTacToeOnline.Gameplay
 
     public class GameManager : NetworkBehaviour
     {
+        public const string MUSIC_VOLUME_PREFS_KEY = "MusicVolume";
+        public const string EFFECTS_VOLUME_PREFS_KEY = "EffectsVolume";
+
         public event EventHandler<OnClickedOnGridPositionEventArgs> OnClickedOnGridPosition;
 
         public class OnClickedOnGridPositionEventArgs : EventArgs
@@ -48,6 +51,12 @@ namespace TicTacToeOnline.Gameplay
 
         [SerializeField]
         private ViewManager viewManager = null;
+
+        [SerializeField]
+        private AudioSource musicAudioSource = null;
+
+        [SerializeField]
+        private AudioSource effectsAudioSource = null;
 
         private static GameManager instance = null;
         private PlayerType localPlayerType = PlayerType.None;
@@ -166,6 +175,8 @@ namespace TicTacToeOnline.Gameplay
             };
 
             Application.targetFrameRate = 60;
+            musicAudioSource.volume = PlayerPrefs.HasKey(MUSIC_VOLUME_PREFS_KEY) ? PlayerPrefs.GetFloat(MUSIC_VOLUME_PREFS_KEY) : 1.0f;
+            effectsAudioSource.volume = PlayerPrefs.HasKey(EFFECTS_VOLUME_PREFS_KEY) ? PlayerPrefs.GetFloat(EFFECTS_VOLUME_PREFS_KEY) : 1.0f;
         }
 
         private void Start()
@@ -316,6 +327,18 @@ namespace TicTacToeOnline.Gameplay
             viewManager.RemoveView<Hud>();
             viewManager.RemoveView<GridView>();
             viewManager.DisplayView<MainMenuView>();
+        }
+
+        public void UpdateMusicVolume(float volume)
+        {
+            musicAudioSource.volume = volume;
+            PlayerPrefs.SetFloat(MUSIC_VOLUME_PREFS_KEY, volume);
+        }
+
+        public void UpdateEffectsVolume(float volume)
+        {
+            effectsAudioSource.volume = volume;
+            PlayerPrefs.SetFloat(EFFECTS_VOLUME_PREFS_KEY, volume);
         }
 
         [Rpc(SendTo.ClientsAndHost)]
