@@ -25,7 +25,7 @@ namespace TicTacToeOnline.Ui.Views
         private void OnDisable()
         {
             musicSlider.onValueChanged.RemoveListener(OnMusicSliderValueChanged);
-            musicSlider.onValueChanged.RemoveListener(OnEffectsSliderValueChanged);
+            effectsSlider.onValueChanged.RemoveListener(OnEffectsSliderValueChanged);
         }
 
         #endregion
