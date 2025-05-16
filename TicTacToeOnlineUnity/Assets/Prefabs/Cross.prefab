@@ -123,5 +123,28 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7794427179279155906, guid: 9f6a478ce9a7e1a408fe6dd228efb611, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8825355201949650612}
   m_SourcePrefab: {fileID: 100100000, guid: 9f6a478ce9a7e1a408fe6dd228efb611, type: 3}
+--- !u!1 &36476440329332602 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7794427179279155906, guid: 9f6a478ce9a7e1a408fe6dd228efb611, type: 3}
+  m_PrefabInstance: {fileID: 7830292007121954232}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8825355201949650612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 36476440329332602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 5, y: -5}
+  m_UseGraphicAlpha: 1

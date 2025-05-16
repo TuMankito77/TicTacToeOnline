@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8708210364650929569}
   - component: {fileID: -1434274451510362391}
   - component: {fileID: 8425505984761676825}
+  - component: {fileID: 387077609639954497}
   m_Layer: 5
   m_Name: BaseButton
   m_TagString: Untagged
@@ -188,6 +189,21 @@ MonoBehaviour:
   startScale: {x: 1, y: 1, z: 1}
   targetScale: {x: 0.5, y: 0.5, z: 0.5}
   playAnimOnStart: 0
+--- !u!114 &387077609639954497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055129959778294096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 5, y: -5}
+  m_UseGraphicAlpha: 1
 --- !u!1 &3439411069913849680
 GameObject:
   m_ObjectHideFlags: 0
