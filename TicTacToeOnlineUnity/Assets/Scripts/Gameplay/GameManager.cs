@@ -326,6 +326,7 @@ namespace TicTacToeOnline.Gameplay
             NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
             viewManager.RemoveView<Hud>();
             viewManager.RemoveView<GridView>();
+            viewManager.RemoveView<GameOverView>();
             viewManager.DisplayView<MainMenuView>();
         }
 
